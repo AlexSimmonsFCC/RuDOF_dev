@@ -248,7 +248,7 @@ require([
     app.map.infoWindow.hide();
     delete app.popupTemplate;
     app.popupTemplate = new PopupTemplate({
-      title: "{Marketname} County",
+      title: "{MarketName} County",
       fieldInfos: [{
         "fieldName": ch,
         "label": app.fields[ch],
