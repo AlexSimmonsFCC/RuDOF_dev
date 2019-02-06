@@ -53,7 +53,7 @@ require([
   app.outFields = ["TtoV", "TtoS","TtoA","TtoO"];
   app.currentAttribute = "TtoV";
   app.popupTemplate = new PopupTemplate({
-    title: "{MarketName} County",
+    title: "{cma} County!",
     fieldInfos: [{
       "fieldName": app.currentAttribute,
       "label": app.fields[app.currentAttribute],
@@ -78,7 +78,7 @@ require([
 
     // show selected attribute on click
     app.mapClick = app.wash.on("click", function (evt) {
-      var name = evt.graphic.attributes.MarketName + " County",
+      var name = evt.graphic.attributes.cma + " County!",
         ca = app.currentAttribute,
         content = app.fields[ca] + ": " + number.format(evt.graphic.attributes[ca]);
       app.map.infoWindow.setTitle(name);
@@ -248,7 +248,7 @@ require([
     app.map.infoWindow.hide();
     delete app.popupTemplate;
     app.popupTemplate = new PopupTemplate({
-      title: "{MarketName} County",
+      title: "{cma} County!",
       fieldInfos: [{
         "fieldName": ch,
         "label": app.fields[ch],
