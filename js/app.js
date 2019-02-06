@@ -53,7 +53,7 @@ require([
   app.outFields = ["TtoV", "TtoS","TtoA","TtoO"];
   app.currentAttribute = "TtoV";
   app.popupTemplate = new PopupTemplate({
-    title: "{MarketName}",
+    title: "{MarketName} County",
     fieldInfos: [{
       "fieldName": app.currentAttribute,
       "label": app.fields[app.currentAttribute],
@@ -248,7 +248,7 @@ require([
     app.map.infoWindow.hide();
     delete app.popupTemplate;
     app.popupTemplate = new PopupTemplate({
-      title: "{MarketName}",
+      title: "{Marketname} County",
       fieldInfos: [{
         "fieldName": ch,
         "label": app.fields[ch],
