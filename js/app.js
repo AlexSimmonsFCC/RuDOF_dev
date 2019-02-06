@@ -50,10 +50,10 @@ require([
 
   // various info for the feature layer
   app.countiesUrl = "https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/CMA_Full/FeatureServer/0";
-  app.outFields = ["TtoV", "TtoS","TtoA","TtoO"];
+  app.outFields = ["TtoV", "TtoS","TtoA","TtoO", "MarketName"];
   app.currentAttribute = "TtoV";
   app.popupTemplate = new PopupTemplate({
-    title: "{cma} County!",
+    title: "{MarketName} County!",
     fieldInfos: [{
       "fieldName": app.currentAttribute,
       "label": app.fields[app.currentAttribute],
