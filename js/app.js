@@ -35,8 +35,6 @@ require([
     "TtoO": "Verizon to Other"
   };
 
-
-
   app.map = new Map("map", {
     center: [-95.3, 38.397],
     zoom: 5,
