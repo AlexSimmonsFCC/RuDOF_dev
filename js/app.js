@@ -75,7 +75,7 @@ require([
 
     // show selected attribute on click
     app.mapClick = app.wash.on("click", function (evt) {
-      var name = evt.graphic.attributes.cma + " County!",
+      var name = evt.graphic.attributes.MarketName,
         ca = app.currentAttribute,
         content = app.fields[ca] + ": " + number.format(evt.graphic.attributes[ca]);
       app.map.infoWindow.setTitle(name);
