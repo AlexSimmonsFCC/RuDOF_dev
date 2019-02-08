@@ -31,7 +31,7 @@ require([
   app.fields = {
     "TtoV": "Verizon to Verizon",
     "TtoS": "Verizon to Sprint",
-    "TtoA": "Verison to AT&T",
+    "TtoA": "Verizon to AT&T",
     "TtoO": "Verizon to Other"
   };
 
