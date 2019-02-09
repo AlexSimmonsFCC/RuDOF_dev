@@ -178,7 +178,7 @@ require([
     "items": []
   };
   arrayUtils.forEach(app.outFields, function (f) {
-    if (arrayUtils.indexOf(f.split(" "), "cnamname") == -1) { // exclude attrs that contain "NAME"
+    if (arrayUtils.indexOf(f.split(" "), "MarketName") == -1) { // exclude attrs that contain "NAME"
       fieldNames.items.push({
         "name": app.fields[f],
         "value": f
