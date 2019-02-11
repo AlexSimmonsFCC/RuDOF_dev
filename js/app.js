@@ -31,7 +31,7 @@ require([
   app.fields = {
     "TtoV": "Verizon to Verizon",
     "TtoS": "Verizon to Sprint",
-    "TtoA": "Verizon to AT&T",
+    "TtoA": "Verison to AT&T",
     "TtoO": "Verizon to Other"
   };
 
@@ -47,6 +47,7 @@ require([
 
   // various info for the feature layer
   app.countiesUrl = "https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/CMA_Full/FeatureServer/0";
+  app.postpaidUrl = "https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/CMA_Verizon_Postpaid/FeatureServer/0";
   app.outFields = ["TtoV", "TtoS","TtoA","TtoO","MarketName"];
   app.currentAttribute = "TtoV";
   app.popupTemplate = new PopupTemplate({
@@ -63,6 +64,35 @@ require([
     showAttachments: true
   });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // create a feature layer 
   // wait for map to load so the map's extent is available
   app.map.on("load", function () {
@@ -73,35 +103,69 @@ require([
       "opacity": 0.8
     });
 
-    // show selected attribute on click
-    app.mapClick = app.wash.on("click", function (evt) {
-      var name = evt.graphic.attributes.MarketName,
-        ca = app.currentAttribute,
-        content = app.fields[ca] + ": " + number.format(evt.graphic.attributes[ca]);
-      app.map.infoWindow.setTitle(name);
-      app.map.infoWindow.setContent(content);
-      // show info window at correct location based on the event's properties
-      (evt) ? app.map.infoWindow.show(evt.screenPoint, app.map.getInfoWindowAnchor(evt.screenPoint)): null;
-    });
+
+          // show selected attribute on click
+          app.mapClick = app.wash.on("click", function(evt) {
+            var name = evt.graphic.attributes.NAME + " County!",
+                ca = app.currentAttribute,
+                content = app.fields[ca] + ": " + number.format(evt.graphic.attributes[ca]);
+            app.map.infoWindow.setTitle(name);
+            app.map.infoWindow.setContent(content);
+            // show info window at correct location based on the event's properties
+            (evt) ? app.map.infoWindow.show(evt.screenPoint, app.map.getInfoWindowAnchor(evt.screenPoint)) : null;
+          }); 
 
     app.map.addLayer(app.wash);
-
-
 
     // colors for the renderer
     app.defaultFrom = Color.fromHex("#ff0000");
     app.defaultTo = Color.fromHex("#660000");
 
 
-    createRenderer("market_pop");
+    createRenderer("TtoV");
 
 
     var yearDp = document.getElementById("YR");
     var monthDp = document.getElementById("MNTH");
     var filterButton = document.getElementById('filterBtn');
+    var Button1 = document.getElementById('B1');
+    var Button2 = document.getElementById('B2');
+    var Button3 = document.getElementById('B3');
 
 
-    
+  
+Button1.addEventListener('click', function(e){
+      app.map.removeLayer(app.wash);
+      app.wash = new FeatureLayer(app.postpaidUrl, {
+      "id": "Washington",
+      "infoTemplate": app.popupTemplate,
+      "outFields": app.outFields,
+      "opacity": 0.8
+    })
+     app.defaultFrom = Color.fromHex("#ff0000");
+     app.defaultTo = Color.fromHex("#660000");
+     createRenderer("TtoV");
+     app.map.addLayer(app.wash);
+     app.wash.refresh();
+    }
+                            )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //Create a query for use in our code.
     var query = new Query();
@@ -170,6 +234,26 @@ require([
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // create a store and a filtering select for the county layer's fields
   var fieldNames, fieldStore, fieldSelect;
   fieldNames = {
@@ -217,7 +301,7 @@ require([
     var classDef = new ClassBreaksDefinition();
     classDef.classificationField = app.currentAttribute;
     classDef.classificationMethod = "quantile";
-    classDef.breakCount = 5;
+    classDef.breakCount = 4;
     classDef.baseSymbol = app.sfs;
 
     var colorRamp = new AlgorithmicColorRamp();
