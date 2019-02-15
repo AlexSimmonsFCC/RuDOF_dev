@@ -46,8 +46,9 @@ require([
   app.map.addLayer(ref);
 
   // various info for the feature layer
-  app.countiesUrl = "https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/CMA_Full/FeatureServer/0";
-  app.postpaidUrl = "https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/CMA_Verizon_Postpaid/FeatureServer/0";
+  app.OverallURL = "https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/CMA_Full/FeatureServer/0";
+  app.PrePaidURL = "https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/CMA_Verizon_Prepaid/FeatureServer/0";
+  app.PostPaidURL = "https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/CMA_Verizon_Postpaid/FeatureServer/0";
   app.outFields = ["TtoV", "TtoS","TtoA","TtoO","MarketName"];
   app.currentAttribute = "TtoV";
   app.popupTemplate = new PopupTemplate({
@@ -66,37 +67,10 @@ require([
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   // create a feature layer 
   // wait for map to load so the map's extent is available
   app.map.on("load", function () {
-    app.wash = new FeatureLayer(app.countiesUrl, {
+    app.wash = new FeatureLayer(app.OverallURL, {
       "id": "Washington",
       "infoTemplate": app.popupTemplate,
       "outFields": app.outFields,
@@ -132,11 +106,9 @@ require([
     var Button2 = document.getElementById('B2');
     var Button3 = document.getElementById('B3');
 
-
-  
-Button1.addEventListener('click', function(e){
+     Button1.addEventListener('click', function(e){
       app.map.removeLayer(app.wash);
-      app.wash = new FeatureLayer(app.postpaidUrl, {
+      app.wash = new FeatureLayer(app.OverallURL, {
       "id": "Washington",
       "infoTemplate": app.popupTemplate,
       "outFields": app.outFields,
@@ -147,23 +119,53 @@ Button1.addEventListener('click', function(e){
      createRenderer("TtoV");
      app.map.addLayer(app.wash);
      app.wash.refresh();
-    }
-                            )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    });
+    
+    Button2.addEventListener('click', function(e){
+      app.map.removeLayer(app.wash);
+      app.wash = new FeatureLayer(app.PrePaidURL, {
+      "id": "Washington",
+      "infoTemplate": app.popupTemplate,
+      "outFields": app.outFields,
+      "opacity": 0.8
+    })
+     app.defaultFrom = Color.fromHex("#ff0000");
+     app.defaultTo = Color.fromHex("#660000");
+     createRenderer("TtoV");
+     app.map.addLayer(app.wash);
+     app.wash.refresh();
+    });
+ 
+    Button3.addEventListener('click', function(e){
+      app.map.removeLayer(app.wash);
+      app.wash = new FeatureLayer(app.PostPaidURL, {
+      "id": "Washington",
+      "infoTemplate": app.popupTemplate,
+      "outFields": app.outFields,
+      "opacity": 0.8
+    })
+     app.defaultFrom = Color.fromHex("#ff0000");
+     app.defaultTo = Color.fromHex("#660000");
+     createRenderer("TtoV");
+     app.map.addLayer(app.wash);
+     app.wash.refresh();
+    });
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 
 
@@ -232,28 +234,6 @@ Button1.addEventListener('click', function(e){
   });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   // create a store and a filtering select for the county layer's fields
   var fieldNames, fieldStore, fieldSelect;
   fieldNames = {
@@ -314,7 +294,7 @@ Button1.addEventListener('click', function(e){
     params.classificationDefinition = classDef;
     // limit the renderer to data being shown by the feature layer
     params.where = app.layerDef;
-    var generateRenderer = new GenerateRendererTask(app.countiesUrl);
+    var generateRenderer = new GenerateRendererTask(app.OverallURL);
     generateRenderer.execute(params, applyRenderer, errorHandler);
 
   }
@@ -372,3 +352,6 @@ Button1.addEventListener('click', function(e){
     console.log('Oops, error: ', err);
   }
 });
+
+
+   
