@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -11,8 +12,9 @@
       html, body { height: 100%; width: 100%; margin: 0; padding: 0; }
       #map{ margin: 0; padding: 0; }
       #feedback {
+        border-radius: 10px;
         position: absolute;
-        height: 480px;
+        height: 480;
         font-family: arial;
         margin: 5px;
         padding: 10px;
@@ -22,15 +24,15 @@
         width: 300px;
         left: 30px;
         top: 30px;
-        -moz-box-shadow: 0 0 5px #888;
-        -webkit-box-shadow: 0 0 5px #888;
-        box-shadow: 0 0 5px #888;
+        -moz-box-shadow: 0 0 10px #888;
+        -webkit-box-shadow: 0 0 10px #888;
+        box-shadow: 0 0 10px #888;
       }
       #county { 
         padding: 5px 0 0 0;
         font-weight: 700;
       }
-      #legendWrapper { padding: 0px 0 0 0; }
+      #legendWrapper { padding: 20px 0 0 0; }
       #yearWrapper { padding: 20px 0 0 0; }
       #monthWrapper { padding: 20px 0 0 0; }
       #note { font-size: 80%; font-weight: 700; padding: 0 0 10px 0; }
@@ -46,15 +48,11 @@
   };
 </script>    
     
-    
-        <script src="https://js.arcgis.com/3.27/"></script>
-        <script src="js/app.js"></script>
-        
-        
+<script src="https://js.arcgis.com/3.27/"></script>
+
         </head>
       
-  
-  
+      
 <body class="tundra">
     <div data-dojo-type="dijit.layout.BorderContainer"
          data-dojo-props="design:'headline',gutters:false"
@@ -68,19 +66,22 @@
           <div id="info">
             <div id="note">
             </div>
+            <div>
+  <input type="radio" id="B1" name="B1" value="B1"> <label for="B1">Overall</label>
+  <input type="radio" id="B2" name="B2" value="B2"> <label for="B2">Prepaid</label>
+  <input type="radio" id="B3" name="B3" value="B3"> <label for="B2">Postpaid</label>            
           </div>
-          <input type="radio" id="B1" value="B1"> Overall
-          <input type="radio" id="B2" value="B2"> Prepaid
-          <input type="radio" id="B3" value="B3"> Postpaid
+
+<div>
+          </div>
           <div id="legendWrapper"></div>
           <div id="yearWrapper">
            <strong>Select a Year:</strong>
            <select id="YR"></select>
            </div>
            <br>
-          
              <div id="monthWrapper">
-               <strong>Select a Month:</strong>
+               <strong> Select a Month: </strong>
            <select id="MNTH"></select>
            </div>
            <br/>
@@ -90,10 +91,12 @@
           </div>
           <br>
           <div id="fieldWrapper">
-            <strong>Select Diversion Direction:</strong>
+            <strong>Selet a Diversion Direction:</strong>
           </div>
         </div>
       </div>
     </div>
   </body>
 </html>
+
+
