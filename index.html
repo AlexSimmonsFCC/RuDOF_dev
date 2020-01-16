@@ -1,174 +1,371 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta
-      name="viewport"
-      content="initial-scale=1, maximum-scale=1,user-scalable=no"
-    />
-    <title>Access ArcGIS Online items using OAuthentication - 4.14</title>
 
-    <link
-      rel="stylesheet"
-      href="https://js.arcgis.com/4.14/esri/themes/light/main.css"
-    />
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>Connect America Phase II Auction: Final Eligible Areas - FCC Maps</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.3/esri/css/main.css">
+    <script src="https://js.arcgis.com/4.3/"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
 
-    <script src="https://js.arcgis.com/4.14/"></script>
-    <style>
-      html,
-      body {
-        font-size: 14px;
-        width: 100%;
-        height: 100%;
-        margin: 0px;
-        padding: 0px;
-      }
-
-      .esri-item-gallery .esri-item-container {
-        float: left;
-        text-align: center;
+<style>
+ #helptext {
+        border-radius: 10px;
+        position: fixed;
+        height: 70px;
+        font-family: arial;
+        margin: 5px;
         padding: 10px;
-        width: 204px;
-        display: inline-block;
-      }
+        z-index: 40;
+        background: #D3D3D3;
+        color: #444;
+        width: auto;
+        left: 65px;
+        top: 15px;
+        -moz-box-shadow: 0 0 10px #888;
+        -webkit-box-shadow: 0 0 10px #888;
+        box-shadow: 0 0 10px #888;
+        border-color: #212223;
+        border-width: 2px;
+        border-style: solid;
+             } 
+  
+  #splitblocks {
+        border-radius: 10px;
+        position: fixed;
+        height: auto;
+        font-family: arial;
+        padding: 10px;
+        z-index: 40;
+        background: #D3D3D3;
+        color: #444;
+        width: auto;
+        left: 71px;
+        top: 120px;
+        -moz-box-shadow: 0 0 10px #888;
+        -webkit-box-shadow: 0 0 10px #888;
+        box-shadow: 0 0 10px #888;
+        border-color: #212223;
+        border-width: 2px;
+        border-style: solid;
+             } 
+             
+             
+  #ineligible_area {
+        border-radius: 10px;
+        position: fixed;
+        height: auto;
+        font-family: arial;
+        padding: 10px;
+        z-index: 40;
+        background: #D3D3D3;
+        color: #444;
+        width: auto;
+        left: 220px;
+        top: 120px;
+        -moz-box-shadow: 0 0 10px #888;
+        -webkit-box-shadow: 0 0 10px #888;
+        box-shadow: 0 0 10px #888;
+        border-color: #212223;
+        border-width: 2px;
+        border-style: solid;
+             }              
+             
+      
+</style>
 
-      .esri-item-gallery .esri-image {
-        width: 200px;
-        height: 133px;
-        border: 2px solid gray;
-        border-radius: 5px;
-      }
 
-      .esri-item-gallery .esri-null-image {
-        line-height: 133px;
-        text-align: center;
-        color: #999999;
-      }
 
-      .esri-item-gallery .esri-title {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
 
-      .esri-item-gallery .esri-null-title {
-        color: #999999;
-      }
 
-      .action {
-        color: blue;
-        cursor: pointer;
-        text-decoration: underline;
-      }
-    </style>
+<script>
+
+require([
+  'esri/Map',
+  'esri/views/MapView',
+  'esri/Basemap',
+  'esri/layers/VectorTileLayer',
+  'esri/layers/FeatureLayer',
+  'esri/layers/WebTileLayer',
+  'esri/widgets/Search',
+  'esri/widgets/Home',
+  'esri/widgets/Locate',
+  "esri/portal/Portal",
+  "esri/identity/OAuthInfo",
+  "esri/identity/IdentityManager",
+  "esri/portal/PortalQueryParams",
+  "esri/widgets/Legend",
+  "esri/PopupTemplate"
+],
+    function (Map, MapView, Basemap, VectorTileLayer, FeatureLayer, WebTileLayer, Search, Home, Locate, Portal, OAuthInfo, esriId, PortalQueryParams, Legend, PopupTemplate) {
+      var map, view, searchWidget, homeBtn, locateBtn
+      var layers = window.layers
+      var featLayers = []
+
+
+
+
+var info = new OAuthInfo({
+  // Swap this ID out with registered application ID
+  appId: "5gNN43w5fIZ7AWRS",
+  // Uncomment the next line and update if using your own portal
+  // portalUrl: "https://<host>:<port>/arcgis"
+  // Uncomment the next line to prevent the user's signed in state from being shared with other apps on the same domain with the same authNamespace value.
+  // authNamespace: "portal_oauth_inline",
+  popup: false
+});
+
+esriId.registerOAuthInfos([info]);
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<body>
+    <main class="map-container">
+        <div id="btn-openLayerCtrl" class="esri-ui-corner">
+            <div class="icon-layers esri-component esri-widget-button esri-widget"></div>
+        </div>        
+        <div id="map"></div>
+        
+         <div id="helptext"><strong>&nbsp Select a Rural Digital Opportunity Fund Measure </strong>
+         <br><input type="radio" id="B1" name="Button" value="B1"> <label for="B3">Coverage Area</label>
+         <br><input type="radio" id="B2" name="Button" value="B2"> <label for="B2">Eligible Locations</label>
+         <br><input type="radio" id="B3" name="Button" value="B3"> <label for="B4">Annual Support</label>
+         </div>
+         
+         <div id="splitblocks">
+         <input type="checkbox" id="C1" name="Checkbox" value="C1"> <label for="C1"> Show Slipt Blocks </label>
+         </div>
+         
+         <div id="ineligible_area">
+         <input type="checkbox" id="C2" name="Checkbox" value="C2"> <label for="C2"> Show Ineligible Area</label>
+         </div>
+                
+
+        
+        
+        
+        
+        
+        
+        
+        
+        <div class="map-legend" id='elig_area_legend'>
+            <table>
+                <thead>
+                    <tr>
+                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name"> Coverage Area Legend</span>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Eligible Area</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="key-symbol" style="background-color:#BDD7E7 "></div>
+                        </td>
+                </tbody>
+            </table>
+        </div>
+        
+        
+        
+        
+                <div class="map-legend" id='elig_locs_legend'>
+            <table>
+                <thead>
+                    <tr>
+                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name"> Eligible Locaions Legend</span>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="key-symbol" style="background-color:#EDF8FB"></div>
+                        </td>
+                        <td>0 - 72</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="key-symbol" style="background-color:#B2E2E2"></div>
+                        </td>
+                        <td>73 - 188</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="key-symbol" style="background-color:#56B990"></div>
+                        </td>
+                        <td>189 - 339</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="key-symbol" style="background-color:#2CA25F"></div>
+                        </td>
+                        <td>340 - 576</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="key-symbol" style="background-color:#2CA25F"></div>
+                        </td>
+                        <td>577 - 1215</td>
+                    </tr>
+            </table>
+        </div>
+        
+
+                   <div class="map-legend" id='elig_support_legend'>
+            <table>
+                <thead>
+                    <tr>
+                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name"> Annual Support Legend</span>
+
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="key-symbol" style="background-color:#EDF8FB"></div>
+                        </td>
+                        <td>0 - $35,000</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="key-symbol" style="background-color:#B3CDE3 "></div>
+                        </td>
+                        <td>$35,001 - $98,633</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="key-symbol" style="background-color:#8C96C6"></div>
+                        </td>
+                        <td>$98,634 - $191,500</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="key-symbol" style="background-color:#8856A7 "></div>
+                        </td>
+                        <td>$191,501 - $353,887</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="key-symbol" style="background-color:#810F7C "></div>
+                        </td>
+                        <td>$353,887 - $972,350</td>
+                    </tr>
+            </table>
+        </div>     
+        
+        
+        <div class="map-legend" id='split_blocks_legend_high' style="bottom: 200px">
+            <table>
+                <thead>
+                    <tr>
+                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name">Split Blocks Legend</span>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="key-symbol-line" style="border: solid 1px #FF0000"></div>
+                        </td>
+                        <td>Rate of Return</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="key-symbol-line" style="border: solid 1px #00FFC5"></div>
+                        </td>
+                        <td>Tribal</td>
+                    </tr>
+                    <tr>
+                    </tr>
+            </table>
+        </div> 
+        
+        
+                <div class="map-legend" id='split_blocks_legend_low' style="bottom: 110px">
+            <table>
+                <thead>
+                    <tr>
+                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name">Split Blocks Legend</span>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="key-symbol-line" style="border: solid 1px #FF0000"></div>
+                        </td>
+                        <td>Rate of Return</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="key-symbol-line" style="border: solid 1px #00FFC5"></div>
+                        </td>
+                        <td>Tribal</td>
+                    </tr>
+                    <tr>
+                    </tr>
+            </table>
+        </div> 
+        
+        
+        
+        
+        
+        
+        
+        
+        <button id="btn-openLegend" class="btn legend__icon" title="Map Legend"><span class="icon icon-list"></span></button>
+    </main>
+    
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
     <script>
-      require([
-        "esri/portal/Portal",
-        "esri/identity/OAuthInfo",
-        "esri/identity/IdentityManager",
-        "esri/portal/PortalQueryParams"
-      ], function(Portal, OAuthInfo, esriId, PortalQueryParams) {
-        var personalPanelElement = document.getElementById("personalizedPanel");
-        var anonPanelElement = document.getElementById("anonymousPanel");
-        var userIdElement = document.getElementById("userId");
-
-        var info = new OAuthInfo({
-          // Swap this ID out with registered application ID
-          appId: "5gNN43w5fIZ7AWRS",
-          // Uncomment the next line and update if using your own portal
-          // portalUrl: "https://<host>:<port>/arcgis"
-          // Uncomment the next line to prevent the user's signed in state from being shared with other apps on the same domain with the same authNamespace value.
-          // authNamespace: "portal_oauth_inline",
-          popup: false
-        });
-        esriId.registerOAuthInfos([info]);
-
-        esriId.checkSignInStatus(info.portalUrl + "/sharing")
-          .then(function() {
-            displayItems();
-          })
-          .catch(function() {
-            // Anonymous view
-            anonPanelElement.style.display = "block";
-            personalPanelElement.style.display = "none";
-          });
-
-        document
-          .getElementById("sign-in")
-          .addEventListener("click", function() {
-            // user will be redirected to OAuth Sign In page
-            esriId.getCredential(info.portalUrl + "/sharing");
-          });
-
-        document
-          .getElementById("sign-out")
-          .addEventListener("click", function() {
-            esriId.destroyCredentials();
-            window.location.reload();
-          });
-
-        function displayItems() {
-          var portal = new Portal();
-          // Setting authMode to immediate signs the user in once loaded
-          portal.authMode = "immediate";
-          // Once loaded, user is signed in
-          portal.load().then(function() {
-            // Create query parameters for the portal search
-            var queryParams = new PortalQueryParams({
-              query: "owner:" + portal.user.username,
-              sortField: "numViews",
-              sortOrder: "desc",
-              num: 20
-            });
-
-            userIdElement.innerHTML = portal.user.username;
-            anonPanelElement.style.display = "none";
-            personalPanelElement.style.display = "block";
-
-            // Query the items based on the queryParams created from portal above
-            portal.queryItems(queryParams).then(createGallery);
-          });
-        }
-
-        function createGallery(items) {
-          var htmlFragment = "";
-
-          items.results.forEach(function(item) {
-            htmlFragment +=
-              '<div class="esri-item-container">' +
-              (item.thumbnailUrl
-                ? '<div class="esri-image" style="background-image:url(' +
-                  item.thumbnailUrl +
-                  ');"></div>'
-                : '<div class="esri-image esri-null-image">Thumbnail not available</div>') +
-              (item.title
-                ? '<div class="esri-title">' + (item.title || "") + "</div>"
-                : '<div class="esri-title esri-null-title">Title not available</div>') +
-              "</div>";
-          });
-          document.getElementById("itemGallery").innerHTML = htmlFragment;
-        }
-      });
+    window.jQuery || document.write('<script src="../js/vendor/jquery-1.11.2.min.js"><\/script>')
     </script>
-  </head>
+    <script src="https://js.arcgis.com/4.3/"></script>
+    <script src="js/app.js"></script>
+</body>
 
-  <body>
-    <div
-      id="anonymousPanel"
-      style="display: none; padding: 5px; text-align: center;"
-    >
-      <span id="sign-in" class="action">Sign In</span> and view your ArcGIS
-      Online items.
-    </div>
-
-    <div
-      id="personalizedPanel"
-      style="display: none; padding: 5px; text-align: center;"
-    >
-      Welcome <span id="userId" style="font-weight: bold;"></span> &nbsp;-&nbsp;
-      <span id="sign-out" class="action">Sign Out</span>
-    </div>
-
-    <div id="itemGallery" class="esri-item-gallery" style="width: 100%;"></div>
-  </body>
 </html>
