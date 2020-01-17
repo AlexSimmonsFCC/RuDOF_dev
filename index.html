@@ -143,9 +143,13 @@ esriId.registerOAuthInfos([info]);
 
 
         
-      var ineligible_area_without_border = new FeatureLayer({
-      url: 'https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/Counties/FeatureServer',
-      visible: false})
+      var ineligible_area_without_border = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/test_vtl/VectorTileServer',
+      visible: false},
+      
+                                                           
+                                                           
+                        )
       
       
           map.add(ineligible_area_without_border)
