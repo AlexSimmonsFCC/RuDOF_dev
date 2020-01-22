@@ -93,212 +93,320 @@
     
      
     
-      require(['esri/layers/VectorTileLayer',
-        "esri/Map","esri/Graphic","esri/symbols/SimpleMarkerSymbol","esri/symbols/SimpleFillSymbol","esri/widgets/Legend","esri/tasks/Locator","esri/geometry/support/webMercatorUtils","esri/geometry/Point",
-        "esri/views/MapView",
-        "esri/layers/FeatureLayer","esri/widgets/Search", "esri/widgets/Home","esri/tasks/support/Query", "esri/tasks/QueryTask","esri/identity/OAuthInfo", "esri/identity/IdentityManager", "dojo/domReady!"], 
       
-      function(VectorTileLayer, Map, Graphic, SimpleMarkerSymbol, SimpleFillSymbol, Legend, Locator, webMercatorUtils, Point, MapView, FeatureLayer, Search, Home, Query, QueryTask, OAuthInfo, esriId) {
-        var map = new Map({
-          basemap: "dark-gray"
-        });
+require([
+  'esri/Map',
+  'esri/views/MapView',
+  'esri/Basemap',
+  'esri/layers/VectorTileLayer',
+  'esri/layers/FeatureLayer',
+  'esri/layers/WebTileLayer',
+  'esri/widgets/Search',
+  'esri/widgets/Home',
+  'esri/widgets/Locate',
+  "esri/portal/Portal",
+  "esri/identity/OAuthInfo",
+  "esri/identity/IdentityManager",
+  "esri/portal/PortalQueryParams",
+  "esri/widgets/Legend",
+  "esri/PopupTemplate"
+],
+    function (Map, MapView, Basemap, VectorTileLayer, FeatureLayer, WebTileLayer, Search, Home, Locate, Portal, OAuthInfo, esriId, PortalQueryParams, Legend, PopupTemplate) {
+      var map, view, searchWidget, homeBtn, locateBtn
+      var layers = window.layers
+      var featLayers = []
 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+
 var info = new OAuthInfo({
-  appId: "plsUr9sUTKJRu3TO",
+  // Swap this ID out with registered application ID
+  appId: "5gNN43w5fIZ7AWRS",
+  // Uncomment the next line and update if using your own portal
+  // portalUrl: "https://<host>:<port>/arcgis"
+  // Uncomment the next line to prevent the user's signed in state from being shared with other apps on the same domain with the same authNamespace value.
+  // authNamespace: "portal_oauth_inline",
   popup: false
 });
 
 esriId.registerOAuthInfos([info]);
 
 
-        
 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-      
-      
-      
-        
-        
-        var view = new MapView({
-          container: "viewDiv",
-          map: map,
-          center: [-95.3, 38.397],
-          zoom: 5
-        });
-        
-         var home = new Home({
-         view: view
-          }, "HomeButton");
-         view.ui.add(home, "top-left");
+        // Create base layer from Mapbox street layer
+      var mapBaseLayer = new WebTileLayer({
+        urlTemplate: 'https://{subDomain}.tiles.mapbox.com/v4/fcc.map-toolde8w/{level}/{col}/{row}.png?access_token=pk.eyJ1IjoiZmNjIiwiYSI6InBiaGMyLU0ifQ.LOmVYpUCFv2yWpbvxDdQNg',
+        subDomains: ['a', 'b', 'c', 'd'],
+        copyright: '\u00A9 OpenStreetMap contributors Design \u00A9 Mapbox'
+      })
 
-         var template = {
-        title: 'Rural Tier'
+        // Create base map from Mapbox layer
+      var mapBox = new Basemap({
+        baseLayers: [mapBaseLayer],
+        title: 'Street'
+      })
+
+        // Create map
+      map = new Map({
+        basemap: mapBox
+      })
+
+        // Make map view and bind it to the map
+      view = new MapView({
+        container: 'map',
+        map: map,
+        center: [-90, 40.48],
+        zoom: 5,
+        constraints: {
+          minZoom: 4,
+          maxZoom: 13,
+          rotationEnabled: false
+        }
+      })
+
+        // Add search widget
+      searchWidget = new Search({
+        view: view
+      })
+
+        // Position search widget
+      view.ui.add(searchWidget, {
+        position: 'top-right',
+        index: 2
+      })
+
+        // Add Home widget
+      homeBtn = new Home({
+        view: view
+      })
+
+        // Position Home widget
+      view.ui.add(homeBtn, 'top-left')
+
+        // Add locate widget
+      locateBtn = new Locate({
+        view: view
+      })
+
+        // Position locate widget
+      view.ui.add(locateBtn, {
+        position: 'top-left'
+      })
+
+      var template = {
+        title: 'Block Group: {BlockGroup}',
+        content: '<ul style="margin-top: 0"><li>Locations = {EligLocs}</li><li>Reserve = {AnnSup}</li><ul>',
+        highlightEnabled: true
       }
-            
-            // Instantiate Feature Layyer
-            var vectorTileLayer = new VectorTileLayer({url:"https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/RuralityTiersVTL/VectorTileServer"}); 
-            var featureLayer = new FeatureLayer({url:"https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/RuralityTiersAgain/FeatureServer/0", 
-                                                 outFields: ['*'],
-                                                 visible:false,
-                                                 popupTemplate: template});
-            map.add(vectorTileLayer);
-            map.add(featureLayer);
-            
-
-           
-           var search = new Search({container: "searchbar"});
-           resultwindow.style.visibility='hidden';
-           loadingbar.style.visibility='hidden';
-           
-           
-        // Outer Function to Add Point and Retrieve Rurality Tier from Search Bar
-           search.on('search-complete', function(result){
-           
-            // Show Result Window
-            resultwindow.style.visibility='visible'
-              
-            if(result.results && result.results.length > 0 && result.results[0].results && result.results[0].results.length > 0){
-            var geom = result.results[0].results[0].feature.geometry;
-            }        
-            
-            // Set Text if No Rural Tier
-            document.getElementById("resultwindow").innerHTML = 'The address provided is not in a rural tier.';
-            
-            // Clear Point from Previous Query
-            view.graphics.removeAll();
-            
-            // Construct Point Symbol and Add it When Search Completes
-            var point = { type: "point",  longitude: geom.longitude, latitude: geom.latitude};
-            var markerSymbol = { type: "simple-marker",  color: [226, 119, 40]};
-            var pointGraphic = new Graphic({geometry: point, symbol: markerSymbol});
-            view.graphics.add(pointGraphic);
-            
-            // Zoom to New Point
-            view.goTo({center: [geom.longitude, geom.latitude], zoom: 10}, {animate: true, duration: 2000});
-         
-            // Query to Retrieve Rurality Tier.
-            var query = featureLayer.createQuery();
-            query.outFields = ["Tier"];     
-            query.geometry = geom  
-            
-            // Inner Function to Query the Layers and Set HTML Region with Result
-            featureLayer.queryFeatures(query).then(function(response){
-            var attribute = response.features[0].attributes;
-            console.log(response)
-            document.getElementById("resultwindow").innerHTML = "The address provided is located in a: " + "<span style='font-weight:bold; font-size:100%;' >"  + attribute["Tier"] + " Tier" + "</span>";
-            document.getElementById("info") = search;
-             });
-
-       }); 
-         
-     
-
-     
-     
-     
-     
-     
-      // Outer Function to Add Point and Retrieve Rurality Tier from Click Event
-          view.on('click', function (event) {
-          
-         loadingbar.style.visibility='visible';
-         resultwindow.style.visibility='hidden';
-          // Remove Graphics from Previous Click
-           view.graphics.removeAll();
-           
-          
-          // Get Coords on Mouse Click Location
-           var clickcoords = view.toMap({x: event.x, y: event.y});
-          
-          // Construct Point Symbol and Add to Click Location
-           var point = { type: "point",  longitude: clickcoords.longitude, latitude: clickcoords.latitude};
-           var markerSymbol = { type: "simple-marker",  color: [226, 119, 40]};
-           var pointGraphic = new Graphic({geometry: point, symbol: markerSymbol});
-           view.graphics.add(pointGraphic)
-         
-          // Query to Retrieve Rurality Tier.
-           var query = featureLayer.createQuery();
-           query.outFields = ["Tier"];     
-           query.geometry = clickcoords  
+      
+    $("#elig_support_legend").hide();
+    $("#elig_locs_legend").hide();
+    $("#split_blocks_legend_low").hide();
+    $("#split_blocks_legend_high").hide();
 
 
-          // Inner Function to Query the Layers, Get the Address, and Set HTML Region with Result
-           featureLayer.queryFeatures(query).then(function(response){
-           var attribute = response.features[0].attributes;
-           var locator = new Locator("https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
-           var tier = attribute["Tier"]
+     // Create vector tile layer
+      var area_no_border = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/RuDOF_Eligible_CBGs/VectorTileServer',})
+      
+      var area_with_border = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Eligible_Area_With_Border/VectorTileServer',})
+      
+      var elig_locs_no_border = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Locations_Without_Border/VectorTileServer',
+      visible: false})
+      
+      var elig_locs_with_border = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Locations_With_Border/VectorTileServer',
+      visible: false})
+      
+      var elig_support_no_border = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Support_Without_Borders/VectorTileServer',
+      visible: false})
+      
+      var elig_support_with_border = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Support_With_Borders/VectorTileServer',
+      visible: false})
+
+      var split_blocks = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Split_Blocks/VectorTileServer',
+      visible: false})
+
+      var ineligible_area_without_border = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Blocks_Groups_With_Elig_Blocks_No_Border/VectorTileServer',
+      visible: false})
+
+      var ineligible_area_with_border = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Blocks_Groups_With_Eligible_Blocks_With_Border/VectorTileServer',
+      visible: false})
+
+      // Create feature layers
+      var fLayer = new FeatureLayer({
+        url: 'https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/Final_Eligible_Blocks_CBG_Dissolve/FeatureServer',
+        outFields: ['*']
+      }) 
+
+      fLayer.popupTemplate = template
+
+      // Add tile layers to map
+      
+        map.add(ineligible_area_without_border)
+        ineligible_area_without_border.maxScale = 2200000;
+      
+        map.add(ineligible_area_with_border)
+        ineligible_area_with_border.minScale = 2199999;  
+
+         map.add(area_no_border)
+         area_no_border.maxScale = 2200000;
+      
+//        map.add(area_with_border)
+//        area_with_border.minScale = 2199999;
+      
+      
+//       map.add(elig_locs_no_border)
+//       elig_locs_no_border.maxScale = 2200000;
+      
+//       map.add(elig_locs_with_border)
+//       elig_locs_with_border.minScale = 2199999;
        
-           
-            
-           if (tier.indexOf("None") >= 0) {
-           document.getElementById("resultwindow").innerHTML = 'The address provided is not in a rural tier.';
-           loadingbar.style.visibility='hidden';
-           resultwindow.style.visibility='visible';
-           }
-           else {
-           locator.locationToAddress(webMercatorUtils.webMercatorToGeographic(event.mapPoint), 100).then(function(event){
-            if (event.address) {
-              var address = {Address: event.address};
-              var location = webMercatorUtils.geographicToWebMercator(event.location)}
-              document.getElementById("resultwindow").innerHTML = address["Address"] + 
-              " is located in a: " + "<span style='font-weight:bold; font-size:100%;' >"  + attribute["Tier"] + 
-              " Tier" + "</span>"; 
-           loadingbar.style.visibility='hidden';
-           resultwindow.style.visibility='visible';
-              });
-             }; 
-           document.getElementById("info") = search;
-            });
-            
-       });
-       
-/* var slideSource = document.getElementById('resultwindow');
+//       map.add(elig_support_no_border)
+//       elig_support_no_border.maxScale = 2200000;
+      
+//       map.add(elig_support_with_border)
+//       elig_support_with_border.minScale = 2199999; 
+          
+  //    map.add(split_blocks)
+      
+//     map.add(fLayer) 
 
-document.getElementById('btn-closeLegend').onclick = function () {
-  legend.style.visibility='hidden';
-  console.log('hi');
-} */
-   
-       
-  });
-     
-     
-$(document).ready(function(){
-  $('#btn-closeLegend').click(function(){
-    $("#legend").fadeOut("medium");
-    $("#show_legend_button").fadeIn("medium");
-  });
-});
+      
+     document.getElementById("elig_area_legend").style.visibility = 'visible';
+      
+   // Create event listener and button actionws for eligible area layer and legend
+      var elig_area_toggle = document.getElementById("B1");
+      elig_area_toggle.checked = true;
 
-$(document).ready(function(){
-  $('#show_legend_button').click(function(){
-    $("#legend").fadeIn("medium");
-    $("#show_legend_button").fadeOut("medium");
+      elig_area_toggle.addEventListener("change", function() {
+      document.getElementById("elig_area_legend").style.visibility = 'visible';
+      console.log('You are viewing eligible areas.')
+      elig_locs_no_border.visible = false;
+      elig_locs_with_border.visible = false;
+      elig_support_no_border.visible = false;
+      elig_support_with_border.visible = false;
+      area_no_border.visible = elig_area_toggle.checked;
+      area_with_border.visible = elig_area_toggle.checked;
+      $("#elig_area_legend").fadeIn("fast");
+      $("#elig_locs_legend").fadeOut("fast");
+      $("#elig_support_legend").fadeOut("fast");
+      if (elig_area_toggle.checked == true && split_blocks_toggle.checked == true){
+      $("#split_blocks_legend_high").fadeOut("fast");
+      $("#split_blocks_legend_low").fadeIn("fast");
+      };
   });
-});
+      
+
+    // Create event listener and button actionws for eligible locations layer and legend
+      var elig_locs_toggle = document.getElementById("B2");
+      document.getElementById("elig_locs_legend").style.visibility = 'visible';
+      elig_locs_toggle.addEventListener("change", function() {
+      console.log('You are viewing eligible locations.')
+      elig_locs_no_border.visible = elig_locs_toggle.checked;
+      elig_locs_with_border.visible = elig_locs_toggle.checked;
+      area_no_border.visible = false;
+      area_with_border.visible = false;
+      elig_support_no_border.visible = false;
+      elig_support_with_border.visible = false;
+      $("#elig_area_legend").fadeOut("fast");
+      $("#elig_support_legend").fadeOut("fast");
+      $("#elig_locs_legend").fadeIn("fast");
+      if (elig_locs_toggle.checked == true && split_blocks_toggle.checked == true){
+      $("#split_blocks_legend_high").fadeIn("fast");
+      $("#split_blocks_legend_low").fadeOut("fast");
+      };
+  });
+
+       // Create event listener and button actionws for eligible suport layer and legend
+      var elig_support_toggle = document.getElementById("B3");
+      document.getElementById("elig_support_legend").style.visibility = 'visible';
+      elig_support_toggle.addEventListener("change", function() {
+      console.log('You are viewing annual suppport.')
+      elig_support_no_border.visible = elig_support_toggle.checked;
+      elig_support_with_border.visible = elig_support_toggle.checked;
+      area_no_border.visible = false;
+      area_with_border.visible = false;
+      elig_locs_no_border.visible = false;
+      elig_locs_with_border.visible = false;
+      $("#elig_area_legend").fadeOut("fast");
+      $("#elig_locs_legend").fadeOut("fast");
+      $("#elig_support_legend").fadeIn("fast");
+      if (elig_support_toggle.checked == true && split_blocks_toggle.checked == true){
+      $("#split_blocks_legend_high").fadeIn("fast");
+      $("#split_blocks_legend_low").fadeOut("fast");
+      }
+  });
+      
+      
+      
+      // Create event listener and button actionws for spit blocks and legend
+      var split_blocks_toggle = document.getElementById("C1");
+      split_blocks_toggle.addEventListener("change", function() {
+      split_blocks.visible = split_blocks_toggle.checked;
+      console.log('You turned on the split blocks layer.')
+      if (split_blocks_toggle.checked == true && elig_area_toggle.checked == true){
+      $("#split_blocks_legend_high").fadeOut("fast");
+      $("#split_blocks_legend_low").fadeIn("fast");
+      }
+      else if (split_blocks_toggle.checked == true && elig_area_toggle.checked == false){
+      $("#split_blocks_legend_high").fadeIn("fast");
+      $("#split_blocks_legend_low").fadeOut("fast");
+      }
+      else if (split_blocks_toggle.checked ==  false){
+      $("#split_blocks_legend_high").fadeOut("fast");
+      $("#split_blocks_legend_low").fadeOut("fast");
+      }
+  });
+      
+     // Create event listener and button actionws for ineligible area
+      var ineligible_area_toggle = document.getElementById("C2");
+      ineligible_area_toggle.addEventListener("change", function() {
+      ineligible_area_without_border.visible = ineligible_area_toggle.checked;
+      ineligible_area_with_border.visible = ineligible_area_toggle.checked;
+  });
+    
+      
+      
+      
+      
+      
+      
+      
+   view.watch('extent', function(){
+   console.log("Watch for the current scale: ", view.scale);
+   });
+
+
+
+      $('#btn-closeLegend').on('click', function (e) {
+        e.preventDefault()
+        $('.map-legend').hide('fast')
+      })
+
+      $('#btn-openLegend').on('click', function (e) {
+        e.preventDefault()
+        $('.map-legend').show('fast')
+      })
+
+        // toggle layer control display
+      $('#btn-closeLayerCtrl').on('click', function (e) {
+        e.preventDefault()
+        $('.layer-control').hide('fast')
+      })
+
+      $('#btn-openLayerCtrl').on('click', function (e) {
+        e.preventDefault()
+        $('.layer-control').show('fast')
+      })
+    })
 
       
    
