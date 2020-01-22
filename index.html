@@ -357,7 +357,32 @@ esriId.registerOAuthInfos([info]);
       ineligible_area_with_border.visible = ineligible_area_toggle.checked;
   });
     
-      
+         view.watch('extent', function(){
+   console.log("Watch for the current scale: ", view.scale);
+   });
+
+
+
+      $('#btn-closeLegend').on('click', function (e) {
+        e.preventDefault()
+        $('.map-legend').hide('fast')
+      })
+
+      $('#btn-openLegend').on('click', function (e) {
+        e.preventDefault()
+        $('.map-legend').show('fast')
+      })
+
+        // toggle layer control display
+      $('#btn-closeLayerCtrl').on('click', function (e) {
+        e.preventDefault()
+        $('.layer-control').hide('fast')
+      })
+
+      $('#btn-openLayerCtrl').on('click', function (e) {
+        e.preventDefault()
+        $('.layer-control').show('fast')
+      })
 
 
 
