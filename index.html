@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>RHC Rurality Tiers</title>
+    <title>Rural Digital Opportunity Fund Areas</title>
     <link rel="stylesheet" href="https://js.arcgis.com/4.8/esri/themes/light/main.css"/>
     <script src="https://js.arcgis.com/4.8/"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -99,9 +99,12 @@ require([
   "esri/identity/IdentityManager",
   "esri/portal/PortalQueryParams",
   "esri/widgets/Legend",
-  "esri/PopupTemplate"
+  "esri/PopupTemplate",
+  "esri/geometry/Point",
+  "esri/layers/TileLayer"
 ],
-    function (Map, MapView, Basemap, VectorTileLayer, FeatureLayer, WebTileLayer, Search, Home, Locate, Portal, OAuthInfo, esriId, PortalQueryParams, Legend, PopupTemplate) {
+    function (Map, MapView, Basemap, VectorTileLayer, FeatureLayer, WebTileLayer, Search, Home, Locate, Portal,
+               OAuthInfo, esriId, PortalQueryParams, Legend, PopupTemplate, Point, TileLayer) {
       var map, view, searchWidget, homeBtn, locateBtn
       var layers = window.layers
       var featLayers = []
@@ -110,13 +113,17 @@ require([
 
 
 var info = new OAuthInfo({
-  appId: "plsUr9sUTKJRu3TO",
+  appId: "ilUD28Q0NqmDjSX8",
   popup: false
 });
 
 esriId.registerOAuthInfos([info]);
 
-
+var dojoConfig = {
+    has: {
+      "esri-featurelayer-webgl": 1
+    }
+  };
 
         // Create base layer from Mapbox street layer
       var mapBaseLayer = new WebTileLayer({
@@ -190,12 +197,13 @@ esriId.registerOAuthInfos([info]);
     $("#split_blocks_legend_high").hide();
 
 
-     // Create vector tile layer
+  //   Create vector tile layer
       var area_no_border = new VectorTileLayer({
-      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/RuDOF_Eligible_CBGs/VectorTileServer',})
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/RuDOF_Eligible_CBGs/VectorTileServer'})
       
       var area_with_border = new VectorTileLayer({
-      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Eligible_Area_With_Border/VectorTileServer',})
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Eligible_Area_With_Border/VectorTileServer',
+      visible: false})
       
       var elig_locs_no_border = new VectorTileLayer({
       url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Locations_Without_Border/VectorTileServer',
@@ -224,6 +232,10 @@ esriId.registerOAuthInfos([info]);
       var ineligible_area_with_border = new VectorTileLayer({
       url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Blocks_Groups_With_Eligible_Blocks_With_Border/VectorTileServer',
       visible: false})
+      
+      var cbg_boundary_lines = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/RuDOF_Eligible_CGB_Boundary_Lines/VectorTileServer'
+      })
 
       // Create feature layers
       var fLayer = new FeatureLayer({
@@ -231,39 +243,71 @@ esriId.registerOAuthInfos([info]);
         outFields: ['*']
       }) 
 
-      fLayer.popupTemplate = template
+      // Create Tile Layer of Eligible Area 
+//         var TileLayer = new TileLayer({
+//         url: 'https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/Final_Eligible_Blocks_CBG_Dissolve/MapServer',
+//         popupEnabled: true
+//       }) 
+      
+      
+      var TileLayer = new TileLayer({
+  url: "https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/RuDOF_Elig_Data/MapServer",
+  popupEnabled: true
+});
+      
+      
+   //   fLayer.popupTemplate = template
+
+
+ view.on("click", function(event){
+      var query = fLayer.createQuery();
+        query.returnGeometry = true;
+        query.outFields = ["*"];
+        query.geometry = event.mapPoint;
+        fLayer.queryFeatures(query).then(function (resp) {
+        console.log('You clicked');
+        });
+});
+
+
+
 
       // Add tile layers to map
       
-        map.add(ineligible_area_without_border)
-        ineligible_area_without_border.maxScale = 2200000;
-      
-        map.add(ineligible_area_with_border)
-        ineligible_area_with_border.minScale = 2199999;  
-
-         map.add(area_no_border)
-         area_no_border.maxScale = 2200000;
-      
-       map.add(area_with_border)
-       area_with_border.minScale = 2199999;
-      
-      
-      map.add(elig_locs_no_border)
-      elig_locs_no_border.maxScale = 2200000;
-      
-      map.add(elig_locs_with_border)
-      elig_locs_with_border.minScale = 2199999;
-       
-      map.add(elig_support_no_border)
-      elig_support_no_border.maxScale = 2200000;
-      
-      map.add(elig_support_with_border)
-      elig_support_with_border.minScale = 2199999; 
+       map.add(ineligible_area_without_border)
+  //     ineligible_area_without_border.maxScale = 2200000;
+              
+//        map.add(ineligible_area_with_border)
+//        ineligible_area_with_border.minScale = 2199999;  
+        
+       map.add(area_no_border)
+ //      area_no_border.maxScale = 2200000;
+              
+//         map.add(area_with_border)
+//         area_with_border.minScale = 2199999;
+              
+       map.add(elig_locs_no_border)
+ //      elig_locs_no_border.maxScale = 2200000;
+              
+//        map.add(elig_locs_with_border)
+//        elig_locs_with_border.minScale = 2199999;
+               
+        map.add(elig_support_no_border)
+  //      elig_support_no_border.maxScale = 2200000;
+              
+//         map.add(elig_support_with_border)
+//         elig_support_with_border.minScale = 2199999; 
           
-     map.add(split_blocks)
+        map.add(cbg_boundary_lines)
+        cbg_boundary_lines.minScale = 2199999;
+    
+    
+        map.add(split_blocks) 
       
-//     map.add(fLayer) 
-
+//         map.add(fLayer) 
+     map.add(TileLayer)
+    
+   TileLayer.popupTemplate = template
       
      document.getElementById("elig_area_legend").style.visibility = 'visible';
       
