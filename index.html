@@ -101,10 +101,11 @@ require([
   "esri/widgets/Legend",
   "esri/PopupTemplate",
   "esri/geometry/Point",
-  "esri/layers/TileLayer"
+  "esri/layers/TileLayer",
+  "esri/layers/MapImageLayer"
 ],
     function (Map, MapView, Basemap, VectorTileLayer, FeatureLayer, WebTileLayer, Search, Home, Locate, Portal,
-               OAuthInfo, esriId, PortalQueryParams, Legend, PopupTemplate, Point, TileLayer) {
+               OAuthInfo, esriId, PortalQueryParams, Legend, PopupTemplate, Point, TileLayer, MapImageLayer) {
       var map, view, searchWidget, homeBtn, locateBtn
       var layers = window.layers
       var featLayers = []
@@ -260,7 +261,27 @@ var dojoConfig = {
 });
 
 
+   var MIlayer = new MapImageLayer({
+  portalItem: {  // autocasts as new PortalItem()
+      id: "e7e03ad8f72b42709e7d63dde8c6c3f5"
+    },
+  sublayers: [{
+    id: 0,
+    popupTemplate: {
+      title: "test",
+      content: "test"
+    }
+  }]
+});
 
+  map.add(MIlayer);
+    
+    
+    
+    
+    
+    
+    
 
       // Add tile layers to map
       
@@ -294,7 +315,7 @@ var dojoConfig = {
     
         map.add(split_blocks) 
       
-     map.add(fLayer) 
+   //  map.add(fLayer) 
      map.add(TileLayer)
     
    TileLayer.popupTemplate = template
