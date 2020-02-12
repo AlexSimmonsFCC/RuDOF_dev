@@ -1,144 +1,319 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="initial-scale=1,maximum-scale=1,user-scalable=no"
-    />
-    <title>Intro to PopupTemplate - 4.14</title>
-  </head>
-  
+    <title>Rural Digital Opportunity Fund Areas</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.8/esri/themes/light/main.css"/>
+    <script src="https://js.arcgis.com/4.8/"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
     <style>
+
     
-      html,
-      body,
-      #viewDiv {
-        padding: 0;
-        margin: 0;
-        height: 100%;
-        width: 100%;
-      }
-      
-   
+   #helptext {
+        border-radius: 10px;
+        position: fixed;
+        height: 70px;
+        font-family: arial;
+        margin: 5px;
+        padding: 10px;
+        z-index: 40;
+        background: #D3D3D3;
+        color: #444;
+        width: auto;
+        left: 65px;
+        top: 15px;
+        -moz-box-shadow: 0 0 10px #888;
+        -webkit-box-shadow: 0 0 10px #888;
+        box-shadow: 0 0 10px #888;
+        border-color: #212223;
+        border-width: 2px;
+        border-style: solid;
+             } 
+  
+  #splitblocks {
+        border-radius: 10px;
+        position: fixed;
+        height: auto;
+        font-family: arial;
+        padding: 10px;
+        z-index: 40;
+        background: #D3D3D3;
+        color: #444;
+        width: auto;
+        left: 71px;
+        top: 120px;
+        -moz-box-shadow: 0 0 10px #888;
+        -webkit-box-shadow: 0 0 10px #888;
+        box-shadow: 0 0 10px #888;
+        border-color: #212223;
+        border-width: 2px;
+        border-style: solid;
+             } 
+             
+             
+  #ineligible_area {
+        border-radius: 10px;
+        position: fixed;
+        height: auto;
+        font-family: arial;
+        padding: 10px;
+        z-index: 40;
+        background: #D3D3D3;
+        color: #444;
+        width: auto;
+        left: 220px;
+        top: 120px;
+        -moz-box-shadow: 0 0 10px #888;
+        -webkit-box-shadow: 0 0 10px #888;
+        box-shadow: 0 0 10px #888;
+        border-color: #212223;
+        border-width: 2px;
+        border-style: solid;
+             } 
+
+
+
+     
       
     </style>
 
-    <link
-      rel="stylesheet"
-      href="https://js.arcgis.com/4.14/esri/themes/light/main.css"
-    />
-    <script src="https://js.arcgis.com/4.14/"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
     <script>
-      require([
-        "esri/Map",
-        "esri/layers/FeatureLayer",
-        "esri/views/MapView",
-        "esri/widgets/Legend",
-        "esri/layers/VectorTileLayer",
-        "esri/layers/TileLayer",
-      ], function(Map, FeatureLayer, MapView, Legend, VectorTileLayer, TileLayer) {
+    
+     
+    
       
-        // Create the map
-        var map = new Map({
-          basemap: "dark-gray"
-        });
+require([
+  'esri/Map',
+  'esri/views/MapView',
+  'esri/Basemap',
+  'esri/layers/VectorTileLayer',
+  'esri/layers/FeatureLayer',
+  'esri/layers/WebTileLayer',
+  'esri/widgets/Search',
+  'esri/widgets/Home',
+  'esri/widgets/Locate',
+  "esri/portal/Portal",
+  "esri/identity/OAuthInfo",
+  "esri/identity/IdentityManager",
+  "esri/portal/PortalQueryParams",
+  "esri/widgets/Legend",
+  "esri/PopupTemplate",
+  "esri/geometry/Point",
+  "esri/layers/TileLayer"
+],
+    function (Map, MapView, Basemap, VectorTileLayer, FeatureLayer, WebTileLayer, Search, Home, Locate, Portal,
+               OAuthInfo, esriId, PortalQueryParams, Legend, PopupTemplate, Point, TileLayer) {
+      var map, view, searchWidget, homeBtn, locateBtn
+      var layers = window.layers
+      var featLayers = []
 
-        // Create the MapView
-        var view = new MapView({
-          container: "viewDiv",
-          map: map,
-          center: [-73.95, 40.702],
-          zoom: 11
-        });
+var dojoConfig = {
+    has: {
+      "esri-featurelayer-webgl": 1
+    }
+  };
 
+        // Create base layer from Mapbox street layer
+      var mapBaseLayer = new WebTileLayer({
+        urlTemplate: 'https://{subDomain}.tiles.mapbox.com/v4/fcc.map-toolde8w/{level}/{col}/{row}.png?access_token=pk.eyJ1IjoiZmNjIiwiYSI6InBiaGMyLU0ifQ.LOmVYpUCFv2yWpbvxDdQNg',
+        subDomains: ['a', 'b', 'c', 'd'],
+        copyright: '\u00A9 OpenStreetMap contributors Design \u00A9 Mapbox'
+      })
 
+        // Create base map from Mapbox layer
+      var mapBox = new Basemap({
+        baseLayers: [mapBaseLayer],
+        title: 'Street'
+      })
 
-        var template = {
-          // autocasts as new PopupTemplate()
-          title: "Tract {Final_Elig} in <br>{Final_El_4}</br>",
-          content: [
-            {
-              // It is also possible to set the fieldInfos outside of the content
-              // directly in the popupTemplate. If no fieldInfos is specifically set
-              // in the content, it defaults to whatever may be set within the popupTemplate.
-              type: "fields",
-              fieldInfos: [
-                {
-                  fieldName: "Final_El_1",
-                  label: "Eligible Locations:"
-                },
-                {
-                  fieldName: "Final_El_2",
-                  label: "Reserve ($):",
-                  format: {
-                    digitSeparator: true,
-                    places: 2
-                  }
-                },
-                {
-                  fieldName: "2010Trac_8",
-                  label: "Tract Population:"
-                },
-                
-              ]
-            }
-          ]
-        };
-        
-        
+        // Create map
+      map = new Map({
+        basemap: mapBox
+      })
 
-        
-        
+        // Make map view and bind it to the map
+      view = new MapView({
+        container: 'map',
+        map: map,
+        center: [-90, 40.48],
+        zoom: 5,
+        constraints: {
+          minZoom: 4,
+          maxZoom: 13,
+          rotationEnabled: false
+        }
+      })
+
+        // Add search widget
+      searchWidget = new Search({
+        view: view
+      })
+
+        // Position search widget
+      view.ui.add(searchWidget, {
+        position: 'top-right',
+        index: 2
+      })
+
+        // Add Home widget
+      homeBtn = new Home({
+        view: view
+      })
+
+        // Position Home widget
+      view.ui.add(homeBtn, 'top-left')
+
+        // Add locate widget
+      locateBtn = new Locate({
+        view: view
+      })
+
+        // Position locate widget
+      view.ui.add(locateBtn, {
+        position: 'top-left'
+      })
+
+      var template = {
+        title: 'Block Group: {BlockGroup}',
+        content: '<ul style="margin-top: 0"><li>Locations = {EligLocs}</li><li>Reserve = {AnnSup}</li><ul>',
+        highlightEnabled: true
+      }
+      
     $("#elig_support_legend").hide();
     $("#elig_locs_legend").hide();
     $("#split_blocks_legend_low").hide();
     $("#split_blocks_legend_high").hide();
-        
-        
-        
 
-        
-        
-        
 
-        // Reference the popupTemplate instance in the
-        // popupTemplate property of FeatureLayer
-        var featureLayer = new FeatureLayer({url:"https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/Final_Eligible_Tracts/FeatureServer",
-          popupTemplate: template
+  //   Create vector tile layer
+      var area_no_border = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/RuDOF_Eligible_CBGs/VectorTileServer'})
+      
+      var area_with_border = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Eligible_Area_With_Border/VectorTileServer',
+      visible: false})
+      
+      var elig_locs_no_border = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Locations_Without_Border/VectorTileServer',
+      visible: false})
+      
+      var elig_locs_with_border = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Locations_With_Border/VectorTileServer',
+      visible: false})
+      
+      var elig_support_no_border = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Support_Without_Borders/VectorTileServer',
+      visible: false})
+      
+      var elig_support_with_border = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Support_With_Borders/VectorTileServer',
+      visible: false})
+
+      var split_blocks = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Split_Blocks/VectorTileServer',
+      visible: false})
+
+      var ineligible_area_without_border = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Blocks_Groups_With_Elig_Blocks_No_Border/VectorTileServer',
+      visible: false})
+
+      var ineligible_area_with_border = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Blocks_Groups_With_Eligible_Blocks_With_Border/VectorTileServer',
+      visible: false})
+      
+      var cbg_boundary_lines = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/RuDOF_Eligible_CGB_Boundary_Lines/VectorTileServer'
+      })
+
+      // Create feature layers
+      var fLayer = new FeatureLayer({
+        url: 'https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/Final_Eligible_Blocks_CBG_Dissolve/FeatureServer',
+        outFields: ['*']
+      }) 
+
+      // Create Tile Layer of Eligible Area 
+//         var TileLayer = new TileLayer({
+//         url: 'https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/Final_Eligible_Blocks_CBG_Dissolve/MapServer',
+//         popupEnabled: true
+//       }) 
+      
+      
+      var TileLayer = new TileLayer({
+  url: "https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/RuDOF_Elig_Data/MapServer",
+  popupEnabled: true
+});
+      
+      
+   //   fLayer.popupTemplate = template
+
+
+ view.on("click", function(event){
+      var query = fLayer.createQuery();
+        query.returnGeometry = true;
+        query.outFields = ["*"];
+        query.geometry = event.mapPoint;
+        fLayer.queryFeatures(query).then(function (resp) {
+        console.log('You clicked');
         });
-        
-        var elig_locs_no_border = new VectorTileLayer({ url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Eligible_Locations_Tract/VectorTileServer',
-        visible: false})
-        var elig_support_no_border = new VectorTileLayer({ url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Eligible_Tracts_Support/VectorTileServer',
-        visible: false}) 
-        var area_no_border = new VectorTileLayer({ url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Eligible_Coverage_Area/VectorTileServer'}) 
+});
 
+
+
+
+      // Add tile layers to map
+      
+       map.add(ineligible_area_without_border)
+  //     ineligible_area_without_border.maxScale = 2200000;
+              
+//        map.add(ineligible_area_with_border)
+//        ineligible_area_with_border.minScale = 2199999;  
         
-        
-        map.add(featureLayer);               
-        map.add(elig_locs_no_border)                 
+       map.add(area_no_border)
+ //      area_no_border.maxScale = 2200000;
+              
+//         map.add(area_with_border)
+//         area_with_border.minScale = 2199999;
+              
+       map.add(elig_locs_no_border)
+ //      elig_locs_no_border.maxScale = 2200000;
+              
+//        map.add(elig_locs_with_border)
+//        elig_locs_with_border.minScale = 2199999;
+               
         map.add(elig_support_no_border)
-        map.add(area_no_border)
-        //map.add(split_blocks) 
-        
-        
-     
-        
-      document.getElementById("elig_area_legend").style.visibility = 'visible';
+  //      elig_support_no_border.maxScale = 2200000;
+              
+//         map.add(elig_support_with_border)
+//         elig_support_with_border.minScale = 2199999; 
+          
+        map.add(cbg_boundary_lines)
+        cbg_boundary_lines.minScale = 2199999;
+    
+    
+        map.add(split_blocks) 
+      
+//         map.add(fLayer) 
+     map.add(TileLayer)
+    
+   TileLayer.popupTemplate = template
+      
+     document.getElementById("elig_area_legend").style.visibility = 'visible';
       
    // Create event listener and button actionws for eligible area layer and legend
-      var split_blocks_toggle = document.getElementById("C1");
       var elig_area_toggle = document.getElementById("B1");
       elig_area_toggle.checked = true;
+
       elig_area_toggle.addEventListener("change", function() {
       document.getElementById("elig_area_legend").style.visibility = 'visible';
       console.log('You are viewing eligible areas.')
       elig_locs_no_border.visible = false;
+      elig_locs_with_border.visible = false;
       elig_support_no_border.visible = false;
+      elig_support_with_border.visible = false;
       area_no_border.visible = elig_area_toggle.checked;
+      area_with_border.visible = elig_area_toggle.checked;
       $("#elig_area_legend").fadeIn("fast");
       $("#elig_locs_legend").fadeOut("fast");
       $("#elig_support_legend").fadeOut("fast");
@@ -147,18 +322,19 @@
       $("#split_blocks_legend_low").fadeIn("fast");
       };
   });
-        
+      
 
-       
-        
-   // Create event listener and button actionws for eligible locations layer and legend
+    // Create event listener and button actionws for eligible locations layer and legend
       var elig_locs_toggle = document.getElementById("B2");
       document.getElementById("elig_locs_legend").style.visibility = 'visible';
       elig_locs_toggle.addEventListener("change", function() {
       console.log('You are viewing eligible locations.')
       elig_locs_no_border.visible = elig_locs_toggle.checked;
+      elig_locs_with_border.visible = elig_locs_toggle.checked;
       area_no_border.visible = false;
+      area_with_border.visible = false;
       elig_support_no_border.visible = false;
+      elig_support_with_border.visible = false;
       $("#elig_area_legend").fadeOut("fast");
       $("#elig_support_legend").fadeOut("fast");
       $("#elig_locs_legend").fadeIn("fast");
@@ -166,17 +342,19 @@
       $("#split_blocks_legend_high").fadeIn("fast");
       $("#split_blocks_legend_low").fadeOut("fast");
       };
-  });  
-        
-        
-    // Create event listener and button actionws for eligible suport layer and legend
+  });
+
+       // Create event listener and button actionws for eligible suport layer and legend
       var elig_support_toggle = document.getElementById("B3");
       document.getElementById("elig_support_legend").style.visibility = 'visible';
       elig_support_toggle.addEventListener("change", function() {
       console.log('You are viewing annual suppport.')
       elig_support_no_border.visible = elig_support_toggle.checked;
+      elig_support_with_border.visible = elig_support_toggle.checked;
       area_no_border.visible = false;
+      area_with_border.visible = false;
       elig_locs_no_border.visible = false;
+      elig_locs_with_border.visible = false;
       $("#elig_area_legend").fadeOut("fast");
       $("#elig_locs_legend").fadeOut("fast");
       $("#elig_support_legend").fadeIn("fast");
@@ -184,47 +362,80 @@
       $("#split_blocks_legend_high").fadeIn("fast");
       $("#split_blocks_legend_low").fadeOut("fast");
       }
-  }); 
-        
+  });
+      
+      
+      
+      // Create event listener and button actionws for spit blocks and legend
+      var split_blocks_toggle = document.getElementById("C1");
+      split_blocks_toggle.addEventListener("change", function() {
+      split_blocks.visible = split_blocks_toggle.checked;
+      console.log('You turned on the split blocks layer.')
+      if (split_blocks_toggle.checked == true && elig_area_toggle.checked == true){
+      $("#split_blocks_legend_high").fadeOut("fast");
+      $("#split_blocks_legend_low").fadeIn("fast");
+      }
+      else if (split_blocks_toggle.checked == true && elig_area_toggle.checked == false){
+      $("#split_blocks_legend_high").fadeIn("fast");
+      $("#split_blocks_legend_low").fadeOut("fast");
+      }
+      else if (split_blocks_toggle.checked ==  false){
+      $("#split_blocks_legend_high").fadeOut("fast");
+      $("#split_blocks_legend_low").fadeOut("fast");
+      }
+  });
+      
+     // Create event listener and button actionws for ineligible area
+      var ineligible_area_toggle = document.getElementById("C2");
+      ineligible_area_toggle.addEventListener("change", function() {
+      ineligible_area_without_border.visible = ineligible_area_toggle.checked;
+      ineligible_area_with_border.visible = ineligible_area_toggle.checked;
+  });
     
-        
-        
-        view.on("click", function(event){
-        var query = featureLayer.createQuery();
-        query.returnGeometry = true;
-        query.outFields = ["*"];
-        query.geometry = event.mapPoint;
-        featureLayer.queryFeatures(query).then(function (resp) {
-        console.log(resp);
-        });
-});
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-      });
+         view.watch('extent', function(){
+   console.log("Watch for the current scale: ", view.scale);
+   });
+
+
+
+      $('#btn-closeLegend').on('click', function (e) {
+        e.preventDefault()
+        $('.map-legend').hide('fast')
+      })
+
+      $('#btn-openLegend').on('click', function (e) {
+        e.preventDefault()
+        $('.map-legend').show('fast')
+      })
+
+        // toggle layer control display
+      $('#btn-closeLayerCtrl').on('click', function (e) {
+        e.preventDefault()
+        $('.layer-control').hide('fast')
+      })
+
+      $('#btn-openLayerCtrl').on('click', function (e) {
+        e.preventDefault()
+        $('.layer-control').show('fast')
+      })
+
+
+
+    })
+
+      
+   
+      
+ 
+      
     </script>
-    
-    
-    
-    
 
-
-  <body>
-    <div id="viewDiv"></div>
-
-
+ <body>
+    <main class="map-container">
         <div id="btn-openLayerCtrl" class="esri-ui-corner">
             <div class="icon-layers esri-component esri-widget-button esri-widget"></div>
         </div>        
-
+        <div id="map"></div>
         
          <div id="helptext"><strong>&nbsp Select a Rural Digital Opportunity Fund Measure </strong>
          <br><input type="radio" id="B1" name="Button" value="B1"> <label for="B3">Coverage Area</label>
@@ -236,8 +447,18 @@
          <input type="checkbox" id="C1" name="Checkbox" value="C1"> <label for="C1"> Show Slipt Blocks </label>
          </div>
          
+         <div id="ineligible_area">
+         <input type="checkbox" id="C2" name="Checkbox" value="C2"> <label for="C2"> Show Ineligible Area</label>
+         </div>
+                
+
         
-       
+        
+        
+        
+        
+        
+        
         
         <div class="map-legend" id='elig_area_legend'>
             <table>
@@ -275,31 +496,31 @@
                         <td>
                             <div class="key-symbol" style="background-color:#EDF8FB"></div>
                         </td>
-                        <td>0 - 200</td>
+                        <td>0 - 72</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="key-symbol" style="background-color:#B2E2E2"></div>
                         </td>
-                        <td>200 - 600</td>
+                        <td>73 - 188</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="key-symbol" style="background-color:#56B990"></div>
                         </td>
-                        <td>601 - 1000</td>
+                        <td>189 - 339</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="key-symbol" style="background-color:#2CA25F"></div>
                         </td>
-                        <td>1001 - 2000</td>
+                        <td>340 - 576</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="key-symbol" style="background-color:#2CA25F"></div>
                         </td>
-                        <td>2001 - 5000</td>
+                        <td>577 - 1215</td>
                     </tr>
             </table>
         </div>
@@ -316,34 +537,34 @@
                 </thead>
                 <tbody>
                     <tr>
-                         <td>
-                            <div class="key-symbol" style="background-color:#F7FBFF"></div>
+                        <td>
+                            <div class="key-symbol" style="background-color:#EDF8FB"></div>
                         </td>
-                        <td>0 - $130,000</td>
+                        <td>0 - $35,000</td>
                     </tr>
                     <tr>
                         <td>
-                            <div class="key-symbol" style="background-color:#C6DBEF "></div>
+                            <div class="key-symbol" style="background-color:#B3CDE3 "></div>
                         </td>
-                        <td>$130,001 - $400,000</td>
+                        <td>$35,001 - $98,633</td>
                     </tr>
                     <tr>
                         <td>
-                            <div class="key-symbol" style="background-color:#6BAED6"></div>
+                            <div class="key-symbol" style="background-color:#8C96C6"></div>
                         </td>
-                        <td>$400,001 - $800,000</td>
+                        <td>$98,634 - $191,500</td>
                     </tr>
                     <tr>
                         <td>
-                            <div class="key-symbol" style="background-color:#2171B5 "></div>
+                            <div class="key-symbol" style="background-color:#8856A7 "></div>
                         </td>
-                        <td>$800,001 - $1,600,000</td>
+                        <td>$191,501 - $353,887</td>
                     </tr>
                     <tr>
                         <td>
-                            <div class="key-symbol" style="background-color:#08306B "></div>
+                            <div class="key-symbol" style="background-color:#810F7C "></div>
                         </td>
-                        <td>$1,600,000 - $4,600,000</td>
+                        <td>$353,887 - $972,350</td>
                     </tr>
             </table>
         </div>     
@@ -410,6 +631,8 @@
         
         
         <button id="btn-openLegend" class="btn legend__icon" title="Map Legend"><span class="icon icon-list"></span></button>
-
+    </main>
+    
+</body>
   
-
+</html>
