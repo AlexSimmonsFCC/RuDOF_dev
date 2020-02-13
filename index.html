@@ -176,10 +176,44 @@ var dojoConfig = {
         position: 'top-left'
       })
 
-      var template = {
-        title: 'Block Group: {BlockGroup}',
-        content: '<ul style="margin-top: 0"><li>Locations = {EligLocs}</li><li>Reserve = {AnnSup}</li><ul>'
-      }
+//       var template = {
+//         title: 'Block Group: {BlockGroup}',
+//         content: '<ul style="margin-top: 0"><li>Locations = {EligLocs}</li><li>Reserve = {AnnSup}</li><ul>'
+//       }
+      
+      
+      
+      
+          var template = {
+          // autocasts as new PopupTemplate()
+          title: "{BlockGroup}",
+          content: [
+            {
+              // It is also possible to set the fieldInfos outside of the content
+              // directly in the popupTemplate. If no fieldInfos is specifically set
+              // in the content, it defaults to whatever may be set within the popupTemplate.
+              type: "fields",
+              fieldInfos: [
+                {
+                  fieldName: "test",
+                  label: "test"
+                }
+              ]
+            }
+          ]
+        };
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
       
     $("#elig_support_legend").hide();
     $("#elig_locs_legend").hide();
@@ -230,19 +264,13 @@ var dojoConfig = {
       // Create feature layers
       var fLayer = new FeatureLayer({
         url: 'https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/Final_Eligible_Blocks_CBG_Dissolve/FeatureServer',
+          popupTemplate = template
         outFields: ['*']
       }) 
 
-      // Create Tile Layer of Eligible Area 
-//         var TileLayer = new TileLayer({
-//         url: 'https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/Final_Eligible_Blocks_CBG_Dissolve/MapServer',
-//         popupEnabled: true
-//       }) 
-      
       
 
-      
-      fLayer.popupTemplate = template
+     
 
 
  view.on("click", function(event){
