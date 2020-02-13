@@ -241,11 +241,7 @@ var dojoConfig = {
 //       }) 
       
       
-      var TileLayer = new TileLayer({
-  url: "https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/RuDOF_Elig_Data/MapServer",
-  popupEnabled: true
-});
-      
+
       
       fLayer.popupTemplate = template
 
@@ -261,26 +257,7 @@ var dojoConfig = {
 });
 
 
-   var MIlayer = new MapImageLayer({
-  portalItem: {  // autocasts as new PortalItem()
-      id: "571a789a66334f5c886c71b14a097154"
-    },
-  sublayers: [{
-    id: 0,
-    popupTemplate: {
-      title: "test",
-      content: "test"
-    }
-  }]
-});
 
-  map.add(MIlayer);
-    
-    
-    
-    
-    
-    
     
 
       // Add tile layers to map
@@ -315,8 +292,8 @@ var dojoConfig = {
     
         map.add(split_blocks) 
       
-   //  map.add(fLayer) 
-     map.add(TileLayer)
+     map.add(fLayer) 
+
     
       
      document.getElementById("elig_area_legend").style.visibility = 'visible';
