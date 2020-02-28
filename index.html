@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <title>Rural Digital Opportunity Fund Areas</title>
-    <link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/themes/light/main.css"/>
-    <script src="https://js.arcgis.com/4.14/"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="css/styles.css">
+   <meta charset="utf-8" />
+   <title>Rural Digital Opportunity Fund Areas</title>
+   <link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/themes/light/main.css"/>
+   <script src="https://js.arcgis.com/4.14/"></script>
+   <script src="https://kit.fontawesome.com/073f2168c2.js" crossorigin="anonymous"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+   <link rel="stylesheet" href="css/styles.css">
+    
+    
+  
 </head>
     <style>
 
@@ -20,7 +24,7 @@
         z-index: 40;
         background: #FFFF;
         color: #444;
-        width: auto;
+        width: 325px;
         left: 65px;
         top: 15px;
         border-color: #212223;
@@ -34,14 +38,10 @@
         font-family: arial;
         padding: 10px;
         z-index: 40;
-        background: #FFFF;
         color: #444;
         width: auto;
-        left: 380px;
+        left: 310px;
         top: 105px;
-        border-color: #212223;
-        border-width: 1px;
-        border-style: solid;
              } 
              
               
@@ -69,7 +69,7 @@
         background: #ffffff;
         color: #444;
         width: auto;
-        left: 210px;
+        left: 10px;
         bottom: 100px;
         border-color: #212223;
         border-width: 1px;
@@ -95,13 +95,110 @@
         margin-left: -100px;
              }        
 
-        #basemap_toggle_region {
+
+        #basemap_widget {
+        position: fixed;
+        height: 11px;
+        font-family: arial;
+        padding: 10px;
+        z-index: 40;
+        background: #ffffff;
+        color: #444;
+        width: 11.5px;
+        top: 222px;
+        left: 115px;
+        margin-top: -50px;
+        margin-left: -100px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }     
+
+
+        #slider_widget {
+        position: fixed;
+        height: 11px;
+        font-family: arial;
+        padding: 10px;
+        z-index: 40;
+        background: #ffffff;
+        color: #444;
+        width: 11.5px;
+        top: 261px;
+        left: 115px;
+        margin-top: -50px;
+        margin-left: -100px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+             }    
+
+
+        #slider_menu {
+        position: fixed;
+        height: 40px;
+        font-family: arial;
+        padding: 10px;
+        z-index: 40;
+        background: #ffffff;
+        color: #444;
+        width: 150px;
+        top: 300px;
+        left: 115px;
+        margin-top: -50px;
+        margin-left: -100px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+             } 
+
+        #basemap_menu {
+        position: fixed;
+        height: 74px;
+        font-family: arial;
+        padding: 10px;
+        z-index: 40;
+        background: #ffffff;
+        color: #444;
+        width: 150px;
+        top: 300px;
+        left: 115px;
+        margin-top: -50px;
+        margin-left: -100px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+             } 
+             
+         #show_legend_button {
+        bottom: 25px;
+        height: 28px;
+        margin: 5px;
         position: absolute;
-        height: 1px;
-        width: 1px;
-        left: 0px;
-        top: 155px;
-  }  
+        text-align: left;
+        width: 30px;
+        z-index: 40;
+        left: 12px;
+              }       
+   
+        #show_menu_button{
+        top: 15px;
+        height: 28px;
+        margin: 5px;
+        position: absolute;
+        text-align: left;
+        width: 30px;
+        z-index: 40;
+        left: 65px;
+         }      
+   
+
+  
+  #basemap_widget:hover{cursor: pointer; background-color:#F0F0F0; transition: background-color 125ms ease-in-out;}
+  #slider_widget:hover{cursor: pointer; background-color:#F0F0F0; transition: background-color 125ms ease-in-out;}
+     
+     
+  menutitle {
+  display: block;
+  margin-top: 0em;
+  margin-bottom: 1em;
+  margin-left: 0;
+  margin-right: 0;
+}
+     
+     
      
  </style>
 
@@ -140,12 +237,23 @@ require([
       var featLayers = []
       
       
-// var info = new OAuthInfo({
-//   appId: "ilUD28Q0NqmDjSX8",
-//   popup: false
-// });
+ var info = new OAuthInfo({
+   appId: "ilUD28Q0NqmDjSX8",
+   popup: false
+ });
 
-// esriId.registerOAuthInfos([info]);      
+ esriId.registerOAuthInfos([info]);    
+
+ function setGlobalLegendVal() {
+window.legends_hidden = 2;
+console.log(window.legends_hidden);
+}
+
+setGlobalLegendVal(); 
+
+
+
+
 
 var dojoConfig = {
     has: {
@@ -164,21 +272,14 @@ var dojoConfig = {
         container: 'map',
         map: map,
         center: [-97, 39],
-        zoom: 5,
+        zoom: 4,
         constraints: {
-          minZoom: 5,
+          minZoom: 4,
           maxZoom: 13,
           rotationEnabled: false
         }
       })
 
-
-// Add Basemap Selector Widget
-var basemapToggle = new BasemapToggle({
-  view: view, 
-  nextBasemap: "satellite",
-  container: basemap_toggle_region 
-});
 
 
      // Add search widget
@@ -208,23 +309,6 @@ var basemapToggle = new BasemapToggle({
         position: 'top-left'
       })
 
-
-  // Position basemap seletor widget
-      view.ui.add(basemapToggle, {
-        position: 'top-left'
-      })
-      
-      
-
-   //  Click Event for Blocks Message 
-       view.on("click", function(){
-       console.log(view.scale);
-       console.log(BlocksFeatureLayer.visible)
-       if (view.scale > 1155583.4197442674 && area_toggle.checked == true){        
-       $("#warning").fadeIn("fast");
-       };    
-     });
-
           
       // Zoom In to Block Groups 
       var ZoomInButton = document.getElementById("ZoomIn");
@@ -237,14 +321,59 @@ var basemapToggle = new BasemapToggle({
       // Mousewheel Check to Hide the Block Group Message if user zooms in enough    
       document.getElementById("map").addEventListener("wheel", scalecheck);
        function scalecheck() {
+       console.log(view.scale);
          if (view.scale <= 2311166.8394885347){        
          $("#warning").fadeOut("fast");
          };
        };     
           
+      //  Click Event for Blocks Message 
+       view.on("click", function(){
+       console.log(window.legends_hidden)
+       $("#basemap_menu").fadeOut(100);
+       $("#slider_menu").fadeOut(100);
+     });
+        
+     
+     // Button actions to change the basemap
+     var BM1 = document.getElementById('BM1')
+     var BM2 = document.getElementById('BM2')
+     var BM3 = document.getElementById('BM3')
+ 
+    // Set Light(Default) to checked on load 
+     $(function() {
+    var $radios = $('input:radio[name=BM_Button]');
+    if($radios.is(':checked') === false) {
+        $radios.filter('[value=BM1]').prop('checked', true);
+    }
+});
+     
+    // Set Light(Default) to checked on load 
+     $(function() {
+    var $radios_main = $('input:radio[name=Button]');
+    if($radios_main.is(':checked') === false) {
+        $radios_main.filter('[value=B1]').prop('checked', true);
+    }
+});     
+
           
-          
-          
+     BM1.addEventListener('click', function(){
+     map.basemap = "gray-vector"
+     })   
+     
+     BM2.addEventListener('click', function(){
+     map.basemap = "dark-gray-vector"
+     })   
+     
+     BM3.addEventListener('click', function(){
+     map.basemap = "satellite"
+     })   
+        
+    
+    
+        
+        
+        
         
           
       // Set all of the popup templates
@@ -399,8 +528,18 @@ var basemapToggle = new BasemapToggle({
 
 
   //   Create vector tile layers and feature layers for data
+      var coverage_area_tracts = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/CoverageAreaTracts/VectorTileServer'}) 
+      
+      var coverage_area_blocks = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/CoverageAreaCBGs/VectorTileServer',
+      visible: false}) 
+      
+  
       var area_no_border = new VectorTileLayer({
-      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/RuDOF_Eligible_CBGs/VectorTileServer'}) 
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/RuDOF_Eligible_CBGs/VectorTileServer',
+      visible: false}) 
+
 
       var elig_locs_no_border = new VectorTileLayer({
       url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/EligibleCBGLocations/VectorTileServer',
@@ -443,27 +582,53 @@ var basemapToggle = new BasemapToggle({
       var TractFeatureLayer = new FeatureLayer({url:  "https://services.arcgis.com/YnOQrIGdN9JGtBh4/arcgis/rest/services/Final_Eligible_Tracts/FeatureServer"
       });
         
-          
+      var elig_support_with_border_tracts = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/EligibleTractSupportWithBorder/VectorTileServer',
+      visible: false})
+      
+      var elig_locations_with_border_tracts = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/EligibleTractLocationsWithBorder/VectorTileServer',
+      visible: false})
+      
+       var elig_locations_with_border_cbg = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/EligibleCBGLocationsWithBorder/VectorTileServer',
+      visible: false})
+      
+      var elig_support_with_border_cbg = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/EligibleCBGSupportWithBorder/VectorTileServer',
+      visible: false})
+       
+    
 
       // Add tile layers to map
-      
-//        map.add(area_no_border);           
-//        map.add(elig_locs_no_border);
-//        map.add(elig_support_no_border);
-//        map.add(elig_locs_no_border_tracts);
-//        map.add(elig_support_no_border_tracts);
+         
+       map.add(coverage_area_tracts); 
+       map.add(coverage_area_blocks);
+       map.add(elig_locs_no_border);
+       map.add(elig_support_no_border);
+       map.add(elig_locs_no_border_tracts);
+       map.add(elig_support_no_border_tracts);
        
-//        map.add(cbg_boundary_lines);
-//        map.add(tract_boundary_lines);
        
-//        map.add(BlocksFeatureLayer);
-//        map.add(TractFeatureLayer);
+       map.add(elig_support_with_border_tracts);
        
-//        map.add(split_blocks)  
+       map.add(elig_locations_with_border_tracts);
+       
+       map.add(elig_locations_with_border_cbg);
+       
+       map.add(elig_support_with_border_cbg);
+
+/*     map.add(cbg_boundary_lines);
+       map.add(tract_boundary_lines); */
+       
+       map.add(BlocksFeatureLayer);
+       map.add(TractFeatureLayer);
+       
+       map.add(split_blocks) 
       
 
        // Set Active Layer to Eligible Area on Map load 
-       var active_layer = area_no_border;
+       var active_layer = coverage_area_tracts;
 
 
         // Opacity Slider Stuff 
@@ -479,299 +644,588 @@ var basemapToggle = new BasemapToggle({
           
        slider.oninput = function() {
        window.adj_val = 1 - this.value
-       active_layer.opacity = window.adj_val; 
+       active_layer.opacity = window.adj_val;
+       console.log(window.adj_val)
  };  
           
 
 
 
-
-
-
      var area_toggle = document.getElementById("b"); 
       
-     document.getElementById("elig_area_legend").style.visibility = 'visible';
+/*    document.getElementById("elig_area_legend").style.visibility = 'visible';*/
       
    // Set Default (Area) FeatureLayer Popup Templates 
      BlocksFeatureLayer.popupTemplate = cbg_area_template;
      TractFeatureLayer.popupTemplate = tracts_area_template
       
-
+      
       
    // Create event listener and button actions for eligible area layer and legend
       var elig_area_toggle = document.getElementById("B1");
-      elig_area_toggle.checked = true;
-      elig_area_toggle.addEventListener("change", function() {
       document.getElementById("elig_area_legend").style.visibility = 'visible';
-      console.log('You are viewing eligible areas.')
-      if (area_toggle.checked == true) {
-      active_layer = area_no_border;
-      area_no_border.opacity = window.adj_val;
-      BlocksFeatureLayer.popupTemplate = cbg_area_template;
-      elig_locs_no_border_tracts.visible = false;
-      elig_support_no_border_tracts.visible = false;
-      elig_locs_no_border.visible = false;
-      elig_support_no_border.visible = false;
-      area_no_border.visible = true;
-      $("#elig_area_legend").fadeIn("fast");
-      $("#elig_locs_legend").fadeOut("fast");
-      $("#elig_support_legend").fadeOut("fast");
-      $("#elig_locations_tracts_legend").fadeOut("fast");
-      $("#elig_support_tracts_legend").fadeOut("fast");
-      } else if (area_toggle.checked == false){
-      active_layer = area_no_border;
-      area_no_border.opacity = window.adj_val;
-      TractFeatureLayer.popupTemplate = tracts_area_template;
-      elig_locs_no_border_tracts.visible = false;
-      elig_support_no_border_tracts.visible = false;
-      elig_locs_no_border.visible = false;
-      elig_support_no_border.visible = false;
-      area_no_border.visible = true;
-      $("#elig_area_legend").fadeIn("fast");
-      $("#elig_locs_legend").fadeOut("fast");
-      $("#elig_support_legend").fadeOut("fast");
-      $("#elig_locations_tracts_legend").fadeOut("fast");
-      $("#elig_support_tracts_legend").fadeOut("fast");
-      };
       
-      if (elig_area_toggle.checked == true && split_blocks_toggle.checked == true){
+      // Actions for Eligible Area Block Groups For When Legend is Hidden (1) and Shown(2)
+      elig_area_toggle.addEventListener("change", function() {
+      if (area_toggle.checked == true && window.legends_hidden == 1) {
+      active_layer = coverage_area_blocks;
+      coverage_area_blocks.opacity = window.adj_val;
+      $("#show_legend_button").fadeIn(200);
+      BlocksFeatureLayer.popupTemplate = cbg_locs_template;
+      elig_locations_with_border_cbg.visible = false;
+      elig_locations_with_border_tracts.visible = false;
+      elig_support_with_border_cbg.visible = false;
+      elig_support_with_border_tracts.visible = false;
+      coverage_area_tracts.visible = false;
+      coverage_area_blocks.visible = true;
+      $("#elig_area_legend").fadeOut("fast");
+      $("#elig_support_legend").fadeOut("fast");
+      $("#elig_locs_legend").fadeOut("fast");
+      $("#split_blocks_legend_low").fadeOut("fast");
       $("#split_blocks_legend_high").fadeOut("fast");
-      $("#split_blocks_legend_low").fadeIn("fast");
-      };
+      } 
+      
+      else if (area_toggle.checked == true && window.legends_hidden == 2) {
+      active_layer = coverage_area_blocks;
+      coverage_area_blocks.opacity = window.adj_val;
+      $("#show_legend_button").fadeOut(200);
+      BlocksFeatureLayer.popupTemplate = cbg_locs_template;
+      elig_locations_with_border_cbg.visible = false;
+      elig_locations_with_border_tracts.visible = false;
+      elig_support_with_border_cbg.visible = false;
+      elig_support_with_border_tracts.visible = false;
+      coverage_area_tracts.visible = false;
+      coverage_area_blocks.visible = true;
+      $("#elig_area_legend").fadeIn("fast");
+      $("#elig_support_tracts_legend").fadeOut("fast");
+      $("#elig_locations_tracts_legend").fadeOut("fast");
+      $("#elig_support_legend").fadeOut("fast");
+      $("#elig_locs_legend").fadeOut("fast");
+      }  
+       
+      // Actions for Eligible Area Tracts For When Legend is Hidden (1) and Shown(2)
+      if (area_toggle.checked == false && window.legends_hidden == 1) {
+      active_layer = coverage_area_tracts;
+      coverage_area_tracts.opacity = window.adj_val;
+      $("#show_legend_button").fadeIn(200);
+      TractFeatureLayer.popupTemplate = tracts_locs_template;
+      elig_locations_with_border_cbg.visible = false;
+      elig_locations_with_border_tracts.visible = false;
+      elig_support_with_border_cbg.visible = false;
+      elig_support_with_border_tracts.visible = false;
+      coverage_area_tracts.visible = true;
+      coverage_area_blocks.visible = false;
+      $("#elig_area_legend").fadeOut("fast");
+      $("#elig_support_legend").fadeOut("fast");
+      $("#elig_locs_legend").fadeOut("fast");
+      $("#split_blocks_legend_low").fadeOut("fast");
+      $("#split_blocks_legend_high").fadeOut("fast");
+      } 
+      
+      else if (area_toggle.checked == false && window.legends_hidden == 2) {
+      active_layer = coverage_area_tracts;
+      coverage_area_tracts.opacity = window.adj_val;
+      $("#show_legend_button").fadeOut(200);
+      TractFeatureLayer.popupTemplate = tracts_locs_template;
+      elig_locations_with_border_cbg.visible = false;
+      elig_locations_with_border_tracts.visible = false;
+      elig_support_with_border_cbg.visible = false;
+      elig_support_with_border_tracts.visible = false;
+      coverage_area_tracts.visible = true;
+      coverage_area_blocks.visible = false;
+      $("#elig_area_legend").fadeIn("fast");
+      $("#elig_support_tracts_legend").fadeOut("fast");
+      $("#elig_locations_tracts_legend").fadeOut("fast");
+      $("#elig_support_legend").fadeOut("fast");
+      $("#elig_locs_legend").fadeOut("fast");
+      }
+      
+      
   });
       
 
     // Create event listener and button actions for eligible locations layer and legend
-      var elig_locs_toggle = document.getElementById("B2");
+       var elig_locs_toggle = document.getElementById("B2");
       document.getElementById("elig_locs_legend").style.visibility = 'visible';
+      
+      // Actions for Eligible Locations Block Groups For When Legend is Hidden (1) and Shown(2)
       elig_locs_toggle.addEventListener("change", function() {
-      if (area_toggle.checked == true) {
-      active_layer = elig_locs_no_border;
-      elig_locs_no_border.opacity = window.adj_val;
-      console.log('You are viewing eligible locations in block groups.')
+      if (area_toggle.checked == true && window.legends_hidden == 1) {
+      active_layer = elig_locations_with_border_cbg;
+      elig_locations_with_border_cbg.opacity = window.adj_val;
+      $("#show_legend_button").fadeIn(200);
       BlocksFeatureLayer.popupTemplate = cbg_locs_template;
-      elig_locs_no_border.visible = true;
-      area_no_border.visible = false;
-      elig_locs_no_border_tracts.visible = false;
-      elig_support_no_border.visible = false;
-      elig_support_no_border_tracts.visible = false;
+      elig_locations_with_border_cbg.visible = true;
+      elig_locations_with_border_tracts.visible = false;
+      elig_support_with_border_cbg.visible = false;
+      elig_support_with_border_tracts.visible = false;
+      coverage_area_tracts.visible = false;
+      coverage_area_blocks.visible = false;
       $("#elig_area_legend").fadeOut("fast");
       $("#elig_support_legend").fadeOut("fast");
-      $("#elig_locs_legend").fadeIn("fast");
+      //$("#elig_locs_legend").fadeIn("fast");
+      $("#split_blocks_legend_low").fadeOut("fast");
+      $("#split_blocks_legend_high").fadeOut("fast");
       } 
       
-      else if (area_toggle.checked == false){
-      active_layer = elig_locs_no_border_tracts;
-      elig_locs_no_border_tracts.opacity = window.adj_val;
+      else if (area_toggle.checked == true && window.legends_hidden == 2) {
+      active_layer = elig_locations_with_border_cbg;
+      elig_locations_with_border_cbg.opacity = window.adj_val;
+      $("#show_legend_button").fadeOut(200);
+      BlocksFeatureLayer.popupTemplate = cbg_locs_template;
+      elig_locations_with_border_cbg.visible = true;
+      elig_locations_with_border_tracts.visible = false;
+      elig_support_with_border_cbg.visible = false;
+      elig_support_with_border_tracts.visible = false;
+      coverage_area_tracts.visible = false;
+      coverage_area_blocks.visible = false;
+      $("#elig_area_legend").fadeOut("fast");
+      $("#elig_support_tracts_legend").fadeOut("fast");
+      $("#elig_locations_tracts_legend").fadeOut("fast");
+      $("#elig_support_legend").fadeOut("fast");
+      $("#elig_locs_legend").fadeIn("fast");
+      }  
+       
+      // Actions for Eligible Locations Tracts For When Legend is Hidden (1) and Shown(2)
+      if (area_toggle.checked == false && window.legends_hidden == 1) {
+      active_layer = elig_locations_with_border_tracts;
+      elig_locations_with_border_tracts.opacity = window.adj_val;
+      $("#show_legend_button").fadeIn(200);
       TractFeatureLayer.popupTemplate = tracts_locs_template;
-      console.log('You are viewing eligible locations in tracts.')
-      elig_locs_no_border_tracts.visible = true;
-      area_no_border.visible = false;
-      elig_support_no_border.visible = false;
-      elig_support_no_border_tracts.visible = false;
-      elig_locs_no_border.visible = false;
+      elig_locations_with_border_cbg.visible = false;
+      elig_locations_with_border_tracts.visible = true;
+      elig_support_with_border_cbg.visible = false;
+      elig_support_with_border_tracts.visible = false;
+      coverage_area_tracts.visible = false;
+      coverage_area_blocks.visible = false;
       $("#elig_area_legend").fadeOut("fast");
       $("#elig_support_legend").fadeOut("fast");
       $("#elig_locs_legend").fadeOut("fast");
-      $("#elig_locations_tracts_legend").fadeIn("fast");
-      $("#elig_support_tracts_legend").fadeOut("fast");
-      }
-      
-      
-      
-      if (elig_locs_toggle.checked == true && split_blocks_toggle.checked == true){
-      $("#split_blocks_legend_high").fadeIn("fast");
       $("#split_blocks_legend_low").fadeOut("fast");
-      };
-  });
+      $("#split_blocks_legend_high").fadeOut("fast");
+      } 
+      
+      else if (area_toggle.checked == false && window.legends_hidden == 2) {
+      active_layer = elig_locations_with_border_tracts;
+      elig_locations_with_border_tracts.opacity = window.adj_val;
+      $("#show_legend_button").fadeOut(200);
+      TractFeatureLayer.popupTemplate = tracts_locs_template;
+      elig_locations_with_border_cbg.visible = false;
+      elig_locations_with_border_tracts.visible = true;
+      elig_support_with_border_cbg.visible = false;
+      elig_support_with_border_tracts.visible = false;
+      coverage_area_tracts.visible = false;
+      coverage_area_blocks.visible = false;
+      $("#elig_area_legend").fadeOut("fast");
+      $("#elig_support_tracts_legend").fadeOut("fast");
+      $("#elig_locations_tracts_legend").fadeIn("fast");
+      $("#elig_support_legend").fadeOut("fast");
+      $("#elig_locs_legend").fadeOut("fast");
+      } 
+      
+     
+  }); 
 
        // Create event listener and button actions for eligible suport layer and legend
       var elig_support_toggle = document.getElementById("B3");
       document.getElementById("elig_support_legend").style.visibility = 'visible';
+      
+      // Actions for Eligible Support Block Groups For When Legend is Hidden (1) and Shown(2)
       elig_support_toggle.addEventListener("change", function() {
-      if (area_toggle.checked == true) {
-      active_layer = elig_support_no_border;
-      elig_support_no_border.opacity = window.adj_val;
+      if (area_toggle.checked == true && window.legends_hidden == 1) {
+      active_layer = elig_support_with_border_cbg;
+      elig_support_with_border_cbg.opacity = window.adj_val;
+      $("#show_legend_button").fadeIn(200);
       BlocksFeatureLayer.popupTemplate = cbg_support_template;
-      console.log('You are viewing eligible support in block groups.')
-      elig_support_no_border.visible = true;
-      area_no_border.visible = false;
-      elig_support_no_border_tracts.visible = false;
-      elig_locs_no_border.visible = false;
-      elig_locs_no_border_tracts.visible = false;
+      elig_locations_with_border_cbg.visible = false;
+      elig_locations_with_border_tracts.visible = false;
+      elig_support_with_border_cbg.visible = true;
+      elig_support_with_border_tracts.visible = false;
+      coverage_area_tracts.visible = false;
+      coverage_area_blocks.visible = false;
       $("#elig_area_legend").fadeOut("fast");
-      $("#elig_support_legend").fadeIn("fast");
-      $("#elig_locs_legend").fadeOut("fast");
-      $("#elig_support_tracts_legend").fadeOut("fast");
-      $("#elig_locations_tracts_legend").fadeOut("fast");
+      $("#elig_support_legend").fadeOut("fast");
+      $("#split_blocks_legend_low").fadeOut("fast");
+      $("#split_blocks_legend_high").fadeOut("fast");
+      //$("#elig_locs_legend").fadeIn("fast");
       } 
       
-      else if (area_toggle.checked == false){
-      active_layer = elig_support_no_border_tracts;
-      elig_support_no_border_tracts.opacity = window.adj_val;
+      else if (area_toggle.checked == true && window.legends_hidden == 2) {
+      active_layer = elig_support_with_border_cbg;
+      elig_support_with_border_cbg.opacity = window.adj_val;
+      $("#show_legend_button").fadeOut(200);
+      BlocksFeatureLayer.popupTemplate = cbg_support_template;
+      elig_locations_with_border_cbg.visible = false;
+      elig_locations_with_border_tracts.visible = false;
+      elig_support_with_border_cbg.visible = true;
+      elig_support_with_border_tracts.visible = false;
+      coverage_area_tracts.visible = false;
+      coverage_area_blocks.visible = false;
+      $("#elig_area_legend").fadeOut("fast");
+      $("#elig_support_tracts_legend").fadeOut("fast");
+      $("#elig_locations_tracts_legend").fadeOut("fast");
+      $("#elig_support_legend").fadeIn("fast");
+      $("#elig_locs_legend").fadeOut("fast");
+      }  
+       
+      // Actions for Eligible Locations Tracts For When Legend is Hidden (1) and Shown(2)
+      if (area_toggle.checked == false && window.legends_hidden == 1) {
+      active_layer = elig_support_with_border_tracts;
+      elig_support_with_border_tracts.opacity = window.adj_val;
+      $("#show_legend_button").fadeIn(200);
       TractFeatureLayer.popupTemplate = tracts_support_template;
-      console.log('You are viewing eligible support in tracts.')
-      elig_support_no_border_tracts.visible = true;
-      area_no_border.visible = false;
-      elig_support_no_border.visible = false;
-      elig_locs_no_border.visible = false;
-      elig_locs_no_border_tracts.visible = false;
+      elig_locations_with_border_cbg.visible = false;
+      elig_locations_with_border_tracts.visible = false;
+      elig_support_with_border_cbg.visible = false;
+      elig_support_with_border_tracts.visible = true;
+      coverage_area_tracts.visible = false;
+      coverage_area_blocks.visible = false;
       $("#elig_area_legend").fadeOut("fast");
       $("#elig_support_legend").fadeOut("fast");
       $("#elig_locs_legend").fadeOut("fast");
+      $("#split_blocks_legend_low").fadeOut("fast");
+      $("#split_blocks_legend_high").fadeOut("fast");
+      } 
+      
+      else if (area_toggle.checked == false && window.legends_hidden == 2) {
+      active_layer = elig_support_with_border_tracts;
+      elig_support_with_border_tracts.opacity = window.adj_val;
+      $("#show_legend_button").fadeOut(200);
+      TractFeatureLayer.popupTemplate = tracts_locs_template;
+      elig_locations_with_border_cbg.visible = false;
+      elig_locations_with_border_tracts.visible = false;
+      elig_support_with_border_cbg.visible = false;
+      elig_support_with_border_tracts.visible = true;
+      coverage_area_tracts.visible = false;
+      coverage_area_blocks.visible = false;
+      $("#elig_area_legend").fadeOut("fast");
       $("#elig_support_tracts_legend").fadeIn("fast");
       $("#elig_locations_tracts_legend").fadeOut("fast");
-      }
+      $("#elig_support_legend").fadeOut("fast");
+      $("#elig_locs_legend").fadeOut("fast");
+      } 
       
+ 
       
-      
-      if (elig_locs_toggle.checked == true && split_blocks_toggle.checked == true){
-      $("#split_blocks_legend_high").fadeIn("fast");
-      $("#split_blocks_legend_low").fadeOut("fast");
-      }; 
   });
       
-    
     // Create event listener and button actions for spit blocks and legend
       var split_blocks_toggle = document.getElementById("C1");
       split_blocks_toggle.addEventListener("change", function() {
       split_blocks.visible = split_blocks_toggle.checked;
-      console.log('You turned on the split blocks layer.')
-      if (split_blocks_toggle.checked == true && elig_area_toggle.checked == true){
-      $("#split_blocks_legend_high").fadeOut("fast");
-      $("#split_blocks_legend_low").fadeIn("fast");
-      }
-      else if (split_blocks_toggle.checked == true && elig_area_toggle.checked == false){
-      $("#split_blocks_legend_high").fadeIn("fast");
-      $("#split_blocks_legend_low").fadeOut("fast");
-      }
-      else if (split_blocks_toggle.checked ==  false){
-      $("#split_blocks_legend_high").fadeOut("fast");
-      $("#split_blocks_legend_low").fadeOut("fast");
-      }
   });
-      
 
 
     // Create event listener and button actions for block groups/tracts toggle
+     // Create Event Actions for Toggling the Feature Layers On and Off
       var area_toggle = document.getElementById("b");
       area_toggle.addEventListener("change", function() {
+      console.log(window.legends_hidden)
       view.popup.close()
       if (area_toggle.checked == true){
       console.log('You are viewing Block Groups.');
       BlocksFeatureLayer.visible = true;
-      cbg_boundary_lines.visible = true;
       TractFeatureLayer.visible = false;
-      tract_boundary_lines.visible = false;
       } else if (area_toggle.checked == false){
-      $("#warning").fadeOut("fast");
       console.log('You are viewing Tracts.');
       BlocksFeatureLayer.visible = false;
       TractFeatureLayer.visible = true;
-      tract_boundary_lines.visible = true;
-      cbg_boundary_lines.visible = false;
-      map.add(tract_boundary_lines);
-      };
+      }; 
       
-      if (area_toggle.checked == true && view.zoom < 8){
-      $("#warning").fadeIn("fast");
-      };
+      // If Conditions for Coverage Block Group for When the Legend is Hidden (1) and Shown (2)
+      if (area_toggle.checked == true && elig_area_toggle.checked == true && window.legends_hidden == 1){
+      $("#show_legend_button").fadeIn(200);
+      coverage_area_tracts.visible = false;
+      coverage_area_blocks.visible = true;
+      active_layer = coverage_area_blocks;
+      coverage_area_blocks.opacity = window.adj_val;
+      BlocksFeatureLayer.popupTemplate = cbg_area_template;
+      $("#elig_area_legend").fadeOut("fast");
+      $("#elig_support_legend").fadeOut("fast");
+      //$("#elig_locs_legend").fadeIn("fast");
+      $("#elig_locations_tracts_legend").fadeOut("fast");
+      $("#elig_support_tracts_legend").fadeOut("fast");
+      } else if (area_toggle.checked == true && elig_area_toggle.checked == true &&  window.legends_hidden == 2){
+      $("#show_legend_button").fadeOut(200);
+      coverage_area_tracts.visible = false; 
+      coverage_area_blocks.visible = true;
+      active_layer = coverage_area_blocks;
+      coverage_area_blocks.opacity = window.adj_val;
+      BlocksFeatureLayer.popupTemplate = cbg_area_template;
+      $("#elig_support_legend").fadeOut("fast");
+      $("#elig_locs_legend").fadeOut("fast");
+      $("#elig_area_legend").fadeIn("fast");
+      $("#elig_locations_tracts_legend").fadeOut("fast");
+      $("#elig_support_tracts_legend").fadeOut("fast"); 
+      }
+      
+      // If Conditions for Coverage Tracts for When the Legend is Hidden (1) and Shown (2)
+      if (area_toggle.checked == false && elig_area_toggle.checked == true && window.legends_hidden == 1){
+      $("#show_legend_button").fadeIn(200);
+      coverage_area_tracts.visible = true;
+      coverage_area_blocks.visible = false;
+      active_layer = coverage_area_tracts;
+      coverage_area_tracts.opacity = window.adj_val;
+      TractFeatureLayer.popupTemplate = tracts_locs_template;
+      $("#elig_area_legend").fadeOut("fast");
+      $("#elig_support_legend").fadeOut("fast");
+      //$("#elig_locs_legend").fadeIn("fast");
+      $("#elig_locations_tracts_legend").fadeOut("fast");
+      $("#elig_support_tracts_legend").fadeOut("fast");
+      } else if (area_toggle.checked == false && elig_area_toggle.checked == true &&  window.legends_hidden == 2){
+      $("#show_legend_button").fadeOut(200);
+      coverage_area_tracts.visible = true; 
+      coverage_area_blocks.visible = false;
+      active_layer = coverage_area_tracts;
+      coverage_area_tracts.opacity = window.adj_val;
+      TractFeatureLayer.popupTemplate = tracts_locs_template;
+      $("#elig_support_legend").fadeOut("fast");
+      $("#elig_locs_legend").fadeOut("fast");
+      $("#elig_area_legend").fadeIn("fast");
+      $("#elig_locations_tracts_legend").fadeOut("fast");
+      $("#elig_support_tracts_legend").fadeOut("fast"); 
+      }
       
       
-      
-      if (area_toggle.checked == true && elig_locs_toggle.checked == true){
-      active_layer = elig_locs_no_border;
-      elig_locs_no_border.opacity = window.adj_val;
-      console.log('You are viewing the eligible locations in block groups')
+      // If Conditions for Locations Block Group for When the Legend is Hidden (1) and Shown (2)
+      if (area_toggle.checked == true && elig_locs_toggle.checked == true && window.legends_hidden == 1){
+      console.log('hi')
+      $("#show_legend_button").fadeIn(200);
+      elig_locations_with_border_tracts.visible = false;
+      elig_locations_with_border_cbg.visible = true;
+      active_layer = elig_locations_with_border_cbg;
+      elig_locations_with_border_cbg.opacity = window.adj_val;
       BlocksFeatureLayer.popupTemplate = cbg_locs_template;
-      elig_locs_no_border.visible = true;
-      elig_locs_no_border_tracts.visible = false;
+      $("#elig_area_legend").fadeOut("fast");
+      $("#elig_support_legend").fadeOut("fast");
+      //$("#elig_locs_legend").fadeIn("fast");
+      $("#elig_locations_tracts_legend").fadeOut("fast");
+      $("#elig_support_tracts_legend").fadeOut("fast");
+      } else if (area_toggle.checked == true && elig_locs_toggle.checked == true &&  window.legends_hidden == 2){
+      $("#show_legend_button").fadeOut(200);
+      elig_locations_with_border_tracts.visible = false; 
+      elig_locations_with_border_cbg.visible = true;
+      active_layer = elig_locations_with_border_cbg;
+      elig_locations_with_border_cbg.opacity = window.adj_val;
+      BlocksFeatureLayer.popupTemplate = cbg_locs_template;
       $("#elig_support_legend").fadeOut("fast");
       $("#elig_locs_legend").fadeIn("fast");
+      $("#elig_area_legend").fadeOut("fast");
       $("#elig_locations_tracts_legend").fadeOut("fast");
-      $("#elig_support_tracts_legend").fadeOut("fast");
-      } else if (area_toggle.checked == false && elig_locs_toggle.checked == true){
-      elig_locs_no_border_tracts.opacity = window.adj_val;
-      active_layer = elig_locs_no_border_tracts;
+      $("#elig_support_tracts_legend").fadeOut("fast"); 
+      }
+      
+      
+      // If Conditions for Locations Tracts for When the Legend is Hidden (1) and Shown (2)
+      if (area_toggle.checked == false && elig_locs_toggle.checked == true && window.legends_hidden == 1){
+      $("#show_legend_button").fadeIn(200);
+      elig_locations_with_border_tracts.visible = true;
+      elig_locations_with_border_cbg.visible = false;
+      active_layer = elig_locations_with_border_tracts;
+      elig_locations_with_border_tracts.opacity = window.adj_val;
       TractFeatureLayer.popupTemplate = tracts_locs_template;
-      elig_locs_no_border.visible = false;
-      elig_locs_no_border_tracts.visible = true;
-      console.log('You are viewing the eligible locations in tracts')
+      $("#elig_area_legend").fadeOut("fast");
       $("#elig_support_legend").fadeOut("fast");
       $("#elig_locs_legend").fadeOut("fast");
-      $("#elig_locations_tracts_legend").fadeIn("fast");
+      $("#elig_locations_tracts_legend").fadeOut("fast");
       $("#elig_support_tracts_legend").fadeOut("fast");
-      };
-  
-      if (area_toggle.checked == true && elig_support_toggle.checked == true){
-      active_layer = elig_support_no_border;
-      elig_support_no_border.opacity = window.adj_val;
+      } else if (area_toggle.checked == false && elig_locs_toggle.checked == true &&  window.legends_hidden == 2){
+      $("#show_legend_button").fadeOut(200);
+      elig_locations_with_border_tracts.visible = true; 
+      elig_locations_with_border_cbg.visible = false;
+      active_layer = elig_locations_with_border_tracts;
+      elig_locations_with_border_tracts.opacity = window.adj_val;
+      TractFeatureLayer.popupTemplate = tracts_locs_template;
+      $("#elig_support_legend").fadeOut("fast");
+      $("#elig_locs_legend").fadeOut("fast");
+      $("#elig_area_legend").fadeOut("fast");
+      $("#elig_locations_tracts_legend").fadeIn("fast");
+      $("#elig_support_tracts_legend").fadeOut("fast"); 
+      }
+      
+  //zzzzzzzz///    
+      
+      // If Conditions for Support Block Group for When the Legend is Hidden (1) and Shown (2)
+      if (area_toggle.checked == true && elig_support_toggle.checked == true && window.legends_hidden == 1){
+      $("#show_legend_button").fadeIn(200);
+      elig_support_with_border_tracts.visible = false;
+      elig_support_with_border_cbg.visible = true;
+      active_layer = elig_support_with_border_cbg;
+      elig_support_with_border_cbg.opacity = window.adj_val;
       BlocksFeatureLayer.popupTemplate = cbg_support_template;
-      elig_support_no_border.visible = true;
-      elig_support_no_border_tracts.visible = false;
-      console.log('You are viewing the eligible locations in block groups')
+      $("#elig_area_legend").fadeOut("fast");
+      $("#elig_support_legend").fadeOut("fast");
+      $("#elig_locs_legend").fadeOut("fast");
+      $("#elig_locations_tracts_legend").fadeOut("fast");
+      $("#elig_support_tracts_legend").fadeOut("fast");
+      } else if (area_toggle.checked == true && elig_support_toggle.checked == true &&  window.legends_hidden == 2){
+      $("#show_legend_button").fadeOut(200);
+      elig_support_with_border_tracts.visible = false; 
+      elig_support_with_border_cbg.visible = true;
+      active_layer = elig_support_with_border_cbg;
+      elig_support_with_border_cbg.opacity = window.adj_val;
+      BlocksFeatureLayer.popupTemplate = cbg_support_template;
       $("#elig_support_legend").fadeIn("fast");
       $("#elig_locs_legend").fadeOut("fast");
+      $("#elig_area_legend").fadeOut("fast");
       $("#elig_locations_tracts_legend").fadeOut("fast");
-      $("#elig_support_tracts_legend").fadeOut("fast");
-      } else if (area_toggle.checked == false && elig_support_toggle.checked == true){
-      active_layer = elig_support_no_border_tracts;
-      elig_support_no_border_tracts.opacity = window.adj_val;
+      $("#elig_support_tracts_legend").fadeOut("fast"); 
+      }  
+
+      // If Conditions for Support Tracts for When the Legend is Hidden (1) and Shown (2)
+      if (area_toggle.checked == false && elig_support_toggle.checked == true && window.legends_hidden == 1){
+      $("#show_legend_button").fadeIn(200);
+      elig_support_with_border_tracts.visible = true;
+      elig_support_with_border_cbg.visible = false;
+      active_layer = elig_support_with_border_tracts;
+      elig_support_with_border_tracts.opacity = window.adj_val;
       TractFeatureLayer.popupTemplate = tracts_support_template;
-      elig_support_no_border.visible = false;
-      elig_support_no_border_tracts.visible = true;     
-      console.log('You are viewing the eligible locations in tracts')
-      $("#elig_support_legend").fadeOut("fast");
-      $("#elig_locs_legend").fadeOut("fast");
-      $("#elig_locations_tracts_legend").fadeOut("fast");
-      $("#elig_support_tracts_legend").fadeIn("fast");
-      };
-      
-      if (area_toggle.checked == true && elig_area_toggle.checked == true){
-      active_layer = area_no_border;
-      area_no_border.opacity = window.adj_val;
-      BlocksFeatureLayer.popupTemplate = cbg_area_template;
-      console.log('You are viewing the eligible areas')
-      $("#elig_area_legend").fadeIn("fast");
+      $("#elig_area_legend").fadeOut("fast");
       $("#elig_support_legend").fadeOut("fast");
       $("#elig_locs_legend").fadeOut("fast");
       $("#elig_locations_tracts_legend").fadeOut("fast");
       $("#elig_support_tracts_legend").fadeOut("fast");
-      } else if (area_toggle.checked == false && elig_area_toggle.checked == true){
-      active_layer = area_no_border;
-      area_no_border.opacity = window.adj_val;
-      TractFeatureLayer.popupTemplate = tracts_area_template
-      console.log('You are viewing the eligible locations in tracts')
-      $("#elig_area_legend").fadeIn("fast");
+      } else if (area_toggle.checked == false && elig_support_toggle.checked == true &&  window.legends_hidden == 2){
+      $("#show_legend_button").fadeOut(200);
+      elig_support_with_border_tracts.visible = true; 
+      elig_support_with_border_cbg.visible = false;
+      active_layer = elig_support_with_border_tracts;
+      elig_support_with_border_tracts.opacity = window.adj_val;
+      TractFeatureLayer.popupTemplate = tracts_support_template;
       $("#elig_support_legend").fadeOut("fast");
       $("#elig_locs_legend").fadeOut("fast");
+      $("#elig_area_legend").fadeOut("fast");
       $("#elig_locations_tracts_legend").fadeOut("fast");
-      $("#elig_support_tracts_legend").fadeOut("fast");
-      };
-      
+      $("#elig_support_tracts_legend").fadeIn("fast"); 
+      }  
 
       
+ });
+
+
+    // Hide/Show Widgets for Transparency and Layers 
+    var slider_wigdet = document.getElementById('slider_widget');
+    var slider_stuff = document.getElementById("sliderregion"); 
+    var slider_range = document.getElementById("sliderrange"); 
+
+
+    $(function() {
+    $('#slider_menu').addClass('hidden').hide();
+    $('#slider_widget').click(function() {
+        if ($('#slider_menu').hasClass('hidden') && ($('#basemap_menu').hasClass('hidden'))) {
+            $('#slider_menu').removeClass('hidden').fadeIn(200);
+            $('#slider_region').removeClass('hidden').fadeIn(200);
+             
+        }
+        else if ($('#slider_menu').hasClass('hidden') && ($('#basemap_menu').hasClass('hidden') == false)){
+                 $('#basemap_menu').addClass('hidden').fadeOut(200);
+                 $('#slider_menu').removeClass('hidden').fadeIn(200);
+                 $('#slider_region').removeClass('hidden').fadeIn(200);
+   }        
+   else {
+             $('#slider_menu').addClass('hidden').fadeOut(200);
+        }
+    });
+     });  
+
+
+
+    $(function() {
+     $('#basemap_menu').addClass('hidden').hide();
+        $('#basemap_widget').click(function() {
+        if ($('#basemap_menu').hasClass('hidden') && ($('#slider_menu').hasClass('hidden'))) {
+            $('#basemap_menu').removeClass('hidden').fadeIn(200);             
+        }
+        else if ($('#basemap_menu').hasClass('hidden') && ($('#slider_menu').hasClass('hidden') == false)){
+                 $('#slider_menu').addClass('hidden').fadeOut(200);
+                 $('#basemap_menu').removeClass('hidden').fadeIn(200);
+   }        
+   else {
+             $('#basemap_menu').addClass('hidden').fadeOut(200);
+        }
+    });
+     });  
+
+
+$(function(){
+  $('#close_elig_area_btn, #close_elig_locs_btn, #close_elig_support_btn, #close_elig_support_tracts_btn, #close_elig_locs_tracts_btn, #close_split_blocks_high_btn, #close_split_blocks_low_btn').click(function(){
+    window.legends_hidden = 1
+    $("#split_blocks_legend_low").fadeOut(200);
+    $("#split_blocks_legend_high").fadeOut(200);
+    $("#elig_locations_tracts_legend").fadeOut(200);
+    $("#elig_support_tracts_legend").fadeOut(200);
+    $("#elig_locs_legend").fadeOut(200);
+    $("#elig_support_legend").fadeOut(200);
+    $("#elig_area_legend").fadeOut(200);
+    $("#show_legend_button").fadeIn(200);  
+    });
+});
+
+ $(function(){
+  $('#show_legend_button').click(function(){
+        window.legends_hidden = 2
+        if  (elig_area_toggle.checked == true) {
+            $("#show_legend_button").fadeOut(200);
+            $("#elig_area_legend").fadeIn(200);             
+        }   
+       else if (elig_locs_toggle.checked == true && area_toggle.checked == false) {
+            $("#show_legend_button").fadeOut(200);
+            $("#elig_locations_tracts_legend").fadeIn(200);             
+        }
+       else if (elig_support_toggle.checked == true && area_toggle.checked == false) {
+            $("#show_legend_button").fadeOut(200);
+            $("#elig_support_tracts_legend").fadeIn(200);             
+        }
+       else if (elig_support_toggle.checked == true && area_toggle.checked == true) {
+            $("#show_legend_button").fadeOut(200);
+            $("#elig_support_legend").fadeIn(200);             
+        }
+        else if (elig_locs_toggle.checked == true && area_toggle.checked == true) {
+            $("#show_legend_button").fadeOut(200);
+            $("#elig_locs_legend").fadeIn(200);             
+        }
+      });
+    });
+ 
+  
+  
+  
+  $(function(){
+  $('#close_menu_btn').click(function(){
+    window.legends_hidden = 1
+    $("#helptext").fadeOut(200);
+    $("#splitblocks").fadeOut(200);
+    $("#toggle_area").fadeOut(200);
+    $("#show_menu_button").fadeIn(200);  
+    });
+});
+
+  $(function(){
+  $('#show_menu_button').click(function(){
+    window.legends_hidden = 1
+    $("#helptext").fadeIn(200);
+        $("#splitblocks").fadeIn(200);
+    $("#toggle_area").fadeIn(200);
+    $("#show_menu_button").fadeOut(200);  
+    });
+});
+  
+  
+  
+  
+  
+  
+  
+   
+  
+
   });
 
 
 
- 
-      
-
-
-
-
-
-
-
-
-
-
-    })
 
       
-      
-
+  
       
     </script>
 
@@ -783,6 +1237,7 @@ var basemapToggle = new BasemapToggle({
         <div id="map"></div>
         
          <div id="helptext"><strong>&nbsp Select a Rural Digital Opportunity Fund Measure </strong>
+         <button id="close_menu_btn" class="close"><span class="close">&times;</span> <span class="sr-only">Hide legend</span></button>
          <br><input type="radio" id="B1" name="Button" value="B1"> <label for="B3">Coverage Area</label>
          <br><input type="radio" id="B2" name="Button" value="B2"> <label for="B2">Eligible Locations</label>
          <br><input type="radio" id="B3" name="Button" value="B3"> <label for="B4">Annual Support</label><br>
@@ -802,24 +1257,41 @@ var basemapToggle = new BasemapToggle({
         
         </div>
         
-        
-        
-<div class="frame">
-	<div class="range">
-		<input type="range" min="0" max="1" value = "0.01", step = ".01" id = "sliderobject" >
-	</div>
-</div>
+<button id = "show_legend_button" style="display:none"><i class="fa fa-bars"></i></button><br><br>  
+<button id = "show_menu_button" style="display:none"><i class="fa fa-bars"></i></button><br><br>
+
 
 <div id="warning">
 <p style="color:black;font-size:14px;">You must <input type="button" id="ZoomIn" value="Zoom In"> <label for="ZoomIn"></label> to view Block Groups</p>
-	</div>
+  </div>
 
 
+<div id="basemap_widget" class="pointer">
+<span class="fas fa-layer-group"></span>
+  </div>
+        
+      
+<sliderwidget id="slider_widget" class="pointer">
+<span class="fas fa-sliders-h"></span>
+  </sliderwidget>
+ 
+         
+<div id="slider_menu"> 
+<menutitle><strong>Data layer transparency</strong></menutitle>
+<div id = 'sliderobjectregion'></div>
+  <div style="width:100% position: center;"><input type="range" min="0" max="1" value = "0.01", step = ".01" id = "sliderobject" style = "display: block"> </div>
+ </div> 
+ 
 
+ 
+ 
+ <div id="basemap_menu"> 
+         <input class = "radio" type="radio" id="BM1" name="BM_Button" value="BM1"> <label for="B3" class = "radio_text">Light (Default)</label>
+         <br><input class = "radio" type="radio" id="BM2" name="BM_Button" value="BM2"> <label for="B2" class = "radio_text">Dark</label>
+         <br><input class = "radio" type="radio" id="BM3" name="BM_Button" value="BM3"> <label for="B4" class = "radio_text">Satellite</label>
+ </div> 
          
-         
-         
-         </div>
+     
          
          <div id="splitblocks">
          <input type="checkbox" id="C1" name="Checkbox" value="C1"> <label for="C1">Slipt Blocks</label>
@@ -831,12 +1303,13 @@ var basemapToggle = new BasemapToggle({
  
         
 
-
+ 
         <div class="map-legend" id='elig_area_legend'>
             <table>
                 <thead>
                     <tr>
-                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name"> Coverage Area Legend</span>
+                    <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name"> Coverage Area Legend &nbsp; &nbsp;</span>
+                         <button id="close_elig_area_btn" class="close"><span class="close">&times;</span></button>
                         </td>
                     </tr>
                 </thead>
@@ -851,7 +1324,7 @@ var basemapToggle = new BasemapToggle({
                 </tbody>
             </table>
         </div>
-        
+       
         
         
         
@@ -859,7 +1332,8 @@ var basemapToggle = new BasemapToggle({
             <table>
                 <thead>
                     <tr>
-                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name"> Eligible Locations in Block Groups</span>
+                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name"> Eligible Locations in Block Groups &nbsp; &nbsp;</span>
+                        <button id="close_elig_locs_btn" class="close"><span class="close">&times;</span> <span class="sr-only">Hide legend</span></button>
                         </td>
                     </tr>
                 </thead>
@@ -902,7 +1376,8 @@ var basemapToggle = new BasemapToggle({
             <table>
                 <thead>
                     <tr>
-                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name"> Annual Support in Block Groups</span>
+                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name"> Annual Support in Block Groups &nbsp; &nbsp;</span>
+                        <button id="close_elig_support_btn" class="close"><span class="close">&times;</span> <span class="sr-only">Hide legend</span></button>
 
                         </td>
                     </tr>
@@ -946,7 +1421,8 @@ var basemapToggle = new BasemapToggle({
             <table>
                 <thead>
                     <tr>
-                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name"> Annual Support in Tracts </span>
+                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name"> Annual Support in Tracts  &nbsp; &nbsp;</span>
+                        <button id="close_elig_support_tracts_btn" class="close"><span class="close">&times;</span> <span class="sr-only">Hide legend</span></button>
 
                         </td>
                     </tr>
@@ -989,7 +1465,8 @@ var basemapToggle = new BasemapToggle({
             <table>
                 <thead>
                     <tr>
-                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name"> Eligible Locations in Tracts</span>
+                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name"> Eligible Locations in Tracts &nbsp; &nbsp;</span>
+                        <button id='close_elig_locs_tracts_btn'><span class="simmons">&times;</span> <span class="sr-only">Hide legend</span></button>
 
                         </td>
                     </tr>
@@ -1048,7 +1525,8 @@ var basemapToggle = new BasemapToggle({
             <table>
                 <thead>
                     <tr>
-                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name">Split Blocks Legend</span>
+                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name">Split Blocks Legend &nbsp; &nbsp;</span>
+                        <button id="close_split_blocks_high_btn" class="close"><span class="close">&times;</span> <span class="sr-only">Hide legend</span></button>
                         </td>
                     </tr>
                 </thead>
@@ -1076,7 +1554,8 @@ var basemapToggle = new BasemapToggle({
             <table>
                 <thead>
                     <tr>
-                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name">Split Blocks Legend</span>
+                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name">Split Blocks Legend &nbsp; &nbsp;</span>
+                        <button id="close_split_blocks_low_btn" class="close"><span class="close">&times;</span> <span class="sr-only">Hide legend</span></button>
                         </td>
                     </tr>
                 </thead>
