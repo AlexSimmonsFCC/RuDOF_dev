@@ -1422,26 +1422,27 @@ var dojoConfig = {
          
          // Support CBGs
          else if (area_toggle.checked == true && window.legends_hidden == 2 && elig_support_toggle.checked == true && newValue >= 9244667.357954139)
-         {active_layer = elig_locs_no_border;
+         {active_layer = elig_support_no_border;
          console.log('Hide Border33');
          active_layer.opacity = window.adj_val;
          }
  
          else if (area_toggle.checked == true && window.legends_hidden == 2 && elig_support_toggle.checked == true && newValue < 9244667.357954139)
-         {active_layer = elig_locations_with_border_cbg;
+         {active_layer = elig_support_with_border_cbg;
          console.log('Show Border32');
+         console.log(active_layer);
          active_layer.opacity = window.adj_val;
          }
 
 
          else if (area_toggle.checked == true && window.legends_hidden == 1 && elig_support_toggle.checked == true && newValue >= 9244667.357954139)
-         {active_layer = elig_locs_no_border;
+         {active_layer = elig_support_no_border;
          console.log('Hide Border31');
          active_layer.opacity = window.adj_val;
          }
  
          else if (area_toggle.checked == true && window.legends_hidden == 1 && elig_support_toggle.checked == true && newValue < 9244667.357954139)
-         {active_layer = elig_locations_with_border_cbg;
+         {active_layer = elig_support_with_border_cbg;
          console.log('Show Border30');
          active_layer.opacity = window.adj_val;
          }   
