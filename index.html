@@ -228,7 +228,6 @@ require([
 
  function setGlobalLegendVal() {
 window.legends_hidden = 2;
-console.log(window.legends_hidden);
 }
 
 setGlobalLegendVal(); 
@@ -303,8 +302,6 @@ var dojoConfig = {
           
       //  Click Event for Blocks Message 
        view.on("click", function(){
-       console.log(view.scale)
-       console.log(view.zoom)
        $("#basemap_menu").fadeOut(100);
        $("#slider_menu").fadeOut(100);
        
@@ -660,7 +657,6 @@ var dojoConfig = {
        slider.oninput = function() {
        window.adj_val = 1 - this.value
        active_layer.opacity = window.adj_val;
-       console.log(window.adj_val)
  };  
           
 
@@ -1004,20 +1000,20 @@ var dojoConfig = {
       }; 
       
       
-      if (view.scale >= 9244667.357954139 && area_toggle.checked == true && elig_area_toggle.checked == true){active_layer = area_no_border;console.log('1')} 
-      else if (view.scale >= 9244667.357954139 && area_toggle.checked == false && elig_area_toggle.checked == true){active_layer = area_no_border;console.log('2')}
-      else if (view.scale < 9244667.357954139 && area_toggle.checked == true && elig_area_toggle.checked == true){active_layer = coverage_area_blocks;console.log('3')}
-      else if (view.scale < 9244667.357954139 && area_toggle.checked == false && elig_area_toggle.checked == true){active_layer = coverage_area_tracts;console.log('4')}
+      if (view.scale >= 9244667.357954139 && area_toggle.checked == true && elig_area_toggle.checked == true){active_layer = area_no_border;} 
+      else if (view.scale >= 9244667.357954139 && area_toggle.checked == false && elig_area_toggle.checked == true){active_layer = area_no_border;}
+      else if (view.scale < 9244667.357954139 && area_toggle.checked == true && elig_area_toggle.checked == true){active_layer = coverage_area_blocks;}
+      else if (view.scale < 9244667.357954139 && area_toggle.checked == false && elig_area_toggle.checked == true){active_layer = coverage_area_tracts;}
       
-      else if (view.scale >= 9244667.357954139 && area_toggle.checked == true && elig_locs_toggle.checked == true){active_layer = elig_locs_no_border;console.log('5')}
-      else if (view.scale >= 9244667.357954139 && area_toggle.checked == false && elig_locs_toggle.checked == true){active_layer = elig_locs_no_border_tracts;console.log('6')}
-      else if (view.scale < 9244667.357954139 && area_toggle.checked == true && elig_locs_toggle.checked == true){active_layer = elig_locations_with_border_cbg;console.log('7')}
-      else if (view.scale < 9244667.357954139 && area_toggle.checked == false && elig_locs_toggle.checked == true){active_layer = elig_locations_with_border_tracts;console.log('8')}  
+      else if (view.scale >= 9244667.357954139 && area_toggle.checked == true && elig_locs_toggle.checked == true){active_layer = elig_locs_no_border;}
+      else if (view.scale >= 9244667.357954139 && area_toggle.checked == false && elig_locs_toggle.checked == true){active_layer = elig_locs_no_border_tracts;}
+      else if (view.scale < 9244667.357954139 && area_toggle.checked == true && elig_locs_toggle.checked == true){active_layer = elig_locations_with_border_cbg;}
+      else if (view.scale < 9244667.357954139 && area_toggle.checked == false && elig_locs_toggle.checked == true){active_layer = elig_locations_with_border_tracts;}  
       
-      else if (view.scale >= 9244667.357954139 && area_toggle.checked == true && elig_support_toggle.checked == true){active_layer = elig_support_no_border;console.log('9')}
-      else if (view.scale >= 9244667.357954139 && area_toggle.checked == false && elig_support_toggle.checked == true){active_layer = elig_support_no_border_tracts;console.log('10')}
-      else if (view.scale < 9244667.357954139 && area_toggle.checked == true && elig_support_toggle.checked == true){active_layer = elig_support_with_border_cbg;console.log('11')}
-      else if (view.scale < 9244667.357954139 && area_toggle.checked == false && elig_support_toggle.checked == true){active_layer = elig_support_with_border_tracts;console.log('12')}  
+      else if (view.scale >= 9244667.357954139 && area_toggle.checked == true && elig_support_toggle.checked == true){active_layer = elig_support_no_border;}
+      else if (view.scale >= 9244667.357954139 && area_toggle.checked == false && elig_support_toggle.checked == true){active_layer = elig_support_no_border_tracts;}
+      else if (view.scale < 9244667.357954139 && area_toggle.checked == true && elig_support_toggle.checked == true){active_layer = elig_support_with_border_cbg;}
+      else if (view.scale < 9244667.357954139 && area_toggle.checked == false && elig_support_toggle.checked == true){active_layer = elig_support_with_border_tracts;}  
       
       active_layer.opacity = window.adj_val;
       
@@ -1289,52 +1285,44 @@ var dojoConfig = {
          // Coverage Area Tracts
          if (area_toggle.checked == false && window.legends_hidden == 2 && elig_area_toggle.checked == true && newValue >= 9244667.357954139)
          {active_layer = area_no_border;
-         console.log('Hide Border');
          active_layer.opacity = window.adj_val;
          }
  
          else if (area_toggle.checked == false && window.legends_hidden == 2 && elig_area_toggle.checked == true && newValue < 9244667.357954139)
          {active_layer = coverage_area_tracts;
-         console.log('Show Border');
          active_layer.opacity = window.adj_val;
          }
 
 
          else if (area_toggle.checked == false && window.legends_hidden == 1 && elig_area_toggle.checked == true && newValue >= 9244667.357954139)
          {active_layer = area_no_border;
-         console.log('Hide Border');
          active_layer.opacity = window.adj_val;
          }
  
          else if (area_toggle.checked == false && window.legends_hidden == 1 && elig_area_toggle.checked == true && newValue < 9244667.357954139)
          {active_layer = coverage_area_tracts;
-         console.log('Show Border');
          active_layer.opacity = window.adj_val;
          }
          
          // Coverage Area Blocks
          else if (area_toggle.checked == true && window.legends_hidden == 2 && elig_area_toggle.checked == true && newValue >= 9244667.357954139)
          {active_layer = area_no_border;
-         console.log('Hide Border');
          active_layer.opacity = window.adj_val;
          }
  
          else if (area_toggle.checked == true && window.legends_hidden == 2 && elig_area_toggle.checked == true && newValue < 9244667.357954139)
          {active_layer = coverage_area_blocks;
-         console.log('Show Border');
          active_layer.opacity = window.adj_val;
          }
 
 
          else if (area_toggle.checked == true && window.legends_hidden == 1 && elig_area_toggle.checked == true && newValue >= 9244667.357954139)
          {active_layer = area_no_border;
-         console.log('Hide Border');
          active_layer.opacity = window.adj_val;
          }
  
          else if (area_toggle.checked == true && window.legends_hidden == 1 && elig_area_toggle.checked == true && newValue < 9244667.357954139)
          {active_layer = coverage_area_blocks;
-         console.log('Show Border');
          active_layer.opacity = window.adj_val;
          }        
          
@@ -1344,51 +1332,43 @@ var dojoConfig = {
          // Locations Tracts
          else if (area_toggle.checked == false && window.legends_hidden == 2 && elig_locs_toggle.checked == true && newValue >= 9244667.357954139)
          {active_layer = elig_locs_no_border_tracts;
-         console.log('Hide Border13');
          active_layer.opacity = window.adj_val;
          }
  
          else if (area_toggle.checked == false && window.legends_hidden == 2 && elig_locs_toggle.checked == true && newValue < 9244667.357954139)
          {active_layer = elig_locations_with_border_tracts;
-         console.log('Show Border14');
          active_layer.opacity = window.adj_val;
          }
 
          else if (area_toggle.checked == false && window.legends_hidden == 1 && elig_locs_toggle.checked == true && newValue >= 9244667.357954139)
          {active_layer = elig_locs_no_border_tracts;
-         console.log('Hide Border15');
          active_layer.opacity = window.adj_val;
          }
  
          else if (area_toggle.checked == false && window.legends_hidden == 1 && elig_locs_toggle.checked == true && newValue < 9244667.357954139)
          {active_layer = elig_locations_with_border_tracts;
-         console.log('Show Border16');
          active_layer.opacity = window.adj_val;
          }
          
          // Locations CBGs
          else if (area_toggle.checked == true && window.legends_hidden == 2 && elig_locs_toggle.checked == true && newValue >= 9244667.357954139)
          {active_layer = elig_locs_no_border;
-         console.log('Hide Border17');
          active_layer.opacity = window.adj_val;
          }
  
          else if (area_toggle.checked == true && window.legends_hidden == 2 && elig_locs_toggle.checked == true && newValue < 9244667.357954139)
          {active_layer = elig_locations_with_border_cbg;
-         console.log('Show Border18');
          active_layer.opacity = window.adj_val;
          }
 
 
          else if (area_toggle.checked == true && window.legends_hidden == 1 && elig_locs_toggle.checked == true && newValue >= 9244667.357954139)
          {active_layer = elig_locations_with_border_cbg;
-         console.log('Hide Border19');
          active_layer.opacity = window.adj_val;
          }
  
          else if (area_toggle.checked == true && window.legends_hidden == 1 && elig_locs_toggle.checked == true && newValue < 9244667.357954139)
          {active_layer = elig_locations_with_border_cbg;
-         console.log('Show Border20');
          active_layer.opacity = window.adj_val;
          }             
          
@@ -1397,53 +1377,44 @@ var dojoConfig = {
         // Support Tracts
          else if (area_toggle.checked == false && window.legends_hidden == 2 && elig_support_toggle.checked == true && newValue >= 9244667.357954139)
          {active_layer = elig_support_no_border_tracts;
-         console.log('Hide Border37');
          active_layer.opacity = window.adj_val;
          }
  
          else if (area_toggle.checked == false && window.legends_hidden == 2 && elig_support_toggle.checked == true && newValue < 9244667.357954139)
          {active_layer = elig_support_with_border_tracts;
-         console.log('Show Border36');
          active_layer.opacity = window.adj_val;
          }
 
 
          else if (area_toggle.checked == false && window.legends_hidden == 1 && elig_support_toggle.checked == true && newValue >= 9244667.357954139)
          {active_layer = elig_support_no_border_tracts;
-         console.log('Hide Border35');
          active_layer.opacity = window.adj_val;
          }
  
          else if (area_toggle.checked == false && window.legends_hidden == 1 && elig_support_toggle.checked == true && newValue < 9244667.357954139)
          {active_layer = elig_support_with_border_tracts;
-         console.log('Show Border34');
          active_layer.opacity = window.adj_val;
          }
          
          // Support CBGs
          else if (area_toggle.checked == true && window.legends_hidden == 2 && elig_support_toggle.checked == true && newValue >= 9244667.357954139)
          {active_layer = elig_support_no_border;
-         console.log('Hide Border33');
          active_layer.opacity = window.adj_val;
          }
  
          else if (area_toggle.checked == true && window.legends_hidden == 2 && elig_support_toggle.checked == true && newValue < 9244667.357954139)
          {active_layer = elig_support_with_border_cbg;
-         console.log('Show Border32');
-         console.log(active_layer);
          active_layer.opacity = window.adj_val;
          }
 
 
          else if (area_toggle.checked == true && window.legends_hidden == 1 && elig_support_toggle.checked == true && newValue >= 9244667.357954139)
          {active_layer = elig_support_no_border;
-         console.log('Hide Border31');
          active_layer.opacity = window.adj_val;
          }
  
          else if (area_toggle.checked == true && window.legends_hidden == 1 && elig_support_toggle.checked == true && newValue < 9244667.357954139)
          {active_layer = elig_support_with_border_cbg;
-         console.log('Show Border30');
          active_layer.opacity = window.adj_val;
          }   
        
