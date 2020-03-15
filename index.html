@@ -226,7 +226,13 @@ require([
    popup: false
  });
 
+ esriId.registerOAuthInfos([info]);    
 
+ function setGlobalLegendVal() {
+window.legends_hidden = 2;
+}
+
+setGlobalLegendVal(); 
 
 var dojoConfig = {
     has: {
