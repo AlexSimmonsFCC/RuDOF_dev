@@ -226,13 +226,6 @@ require([
    popup: false
  });
 
-esriId.registerOAuthInfos([info]);    
-
- function setGlobalLegendVal() {
-window.legends_hidden = 2;
-}
-
-setGlobalLegendVal(); 
 
 
 var dojoConfig = {
@@ -251,11 +244,11 @@ var dojoConfig = {
       view = new MapView({
         container: 'map',
         map: map,
-        center: [-74, 41],
+        center: [-96, 40],
         zoom: 4,
         constraints: {
           minZoom: 4,
-          maxZoom: 9,
+          maxZoom: 13,
           rotationEnabled: false
         }
       })
@@ -289,20 +282,18 @@ var dojoConfig = {
         position: 'top-left'
       })
 
-          
-          
-      
-   view.watch("extent", function(currentExtent) {
-    window.lat_center = currentExtent.center.latitude,
-    window.long_center = currentExtent.center.longitude
-   });
+
+//    view.watch("extent", function(currentExtent) {
+//     window.lat_center = currentExtent.center.latitude,
+//     window.long_center = currentExtent.center.longitude
+//    });
            
-      //  Click Event for Close Open Windows and Print Zoom to Console
-       view.on("click", function(){
-       console.log(view.zoom)  
-       $("#basemap_menu").fadeOut(100);
-       $("#slider_menu").fadeOut(100);
-       });    
+//       //  Click Event for Close Open Windows and Print Zoom to Console
+//        view.on("click", function(){
+//        console.log(view.zoom)  
+//        $("#basemap_menu").fadeOut(100);
+//        $("#slider_menu").fadeOut(100);
+//        });    
           
   // Set Global Legend Value        
    window.legends_hidden = 2;
@@ -535,43 +526,55 @@ var dojoConfig = {
 
       var maxScale = 9244667.357954139;
       var minScale = 9244666.357954139;
+  
+     // Tract Borders 
+      var Tract_Borders = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/tract_borders/VectorTileServer'}) 
+      Tract_Borders.minScale = minScale;
+ 
+      // Block Borders 
+      var Block_Borders = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/cbg_borders/VectorTileServer'}) 
+      Block_Borders.minScale = minScale;
+      Block_Borders.visible = false;
+  
 
   //   Create vector tile layers and feature layers for data
       var Coverage_Area_Tracts_With_Border = new VectorTileLayer({
-      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/test/VectorTileServer'}) 
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/dissolve_coverge_area/VectorTileServer'}) 
       Coverage_Area_Tracts_With_Border.minScale = minScale;
       
       var Coverage_Area_Blocks_With_Border = new VectorTileLayer({
-      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Coverage_Area_CBG_With_Border/VectorTileServer',
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/dissolve_coverge_area/VectorTileServer',
       visible:false}) 
       Coverage_Area_Blocks_With_Border.minScale = minScale;
     
   
       var Coverage_Area_Tracts_No_Border = new VectorTileLayer({
-      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Coverage_Area_Tracts_Without_Border/VectorTileServer'}) 
-      Coverage_Area_Tracts_No_Border.maxScale = maxScale;
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/dissolve_coverge_area/VectorTileServer'}) 
+      //Coverage_Area_Tracts_No_Border.maxScale = maxScale;
 
 
       var Locations_Blocks_No_Border = new VectorTileLayer({
-      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Locations_CGB_Without_Border/VectorTileServer',
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/dissolved_cbg_locations/VectorTileServer',
       visible: false})
-      Locations_Blocks_No_Border.maxScale = maxScale;
+    //  Locations_Blocks_No_Border.maxScale = maxScale;
       
       var Reserve_Blocks_No_Border = new VectorTileLayer({
-      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Reserve_CBG_Without_Border/VectorTileServer',
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/dissolve_cbg_support/VectorTileServer',
       visible: false}) 
-      Reserve_Blocks_No_Border.maxScale = maxScale;
+    //  Reserve_Blocks_No_Border.maxScale = maxScale;
        
             
       var Locations_No_Border_Tracts = new VectorTileLayer({
-      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Locations_Tract_Without_Border/VectorTileServer',
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Test__VTL/VectorTileServer',
       visible: false})
-      Locations_No_Border_Tracts.maxScale = maxScale;
+    //  Locations_No_Border_Tracts.maxScale = maxScale;
       
       var Reserve_Tracts_No_Border = new VectorTileLayer({
-      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Reserve_Tract_Without_Border/VectorTileServer',
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/dissolved_tract_support/VectorTileServer',
       visible: false})
-      Reserve_Tracts_No_Border.maxScale = maxScale;
+   //   Reserve_Tracts_No_Border.maxScale = maxScale;
 
 
       var split_blocks = new VectorTileLayer({
@@ -589,50 +592,82 @@ var dojoConfig = {
       });
         
       var Reserve_Tracts_With_Border = new VectorTileLayer({
-      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Reserve_Tract_With_Border/VectorTileServer',
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/dissolved_tract_support/VectorTileServer',
       visible: false})
       Reserve_Tracts_With_Border.minScale = minScale;
       
       var Locations_Tract_With_Border = new VectorTileLayer({
-      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Locations_Tract_With_Border/VectorTileServer',
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Test__VTL/VectorTileServer',
       visible: false})
       Locations_Tract_With_Border.minScale = minScale;
       
        var Locations_Blocks_With_Border = new VectorTileLayer({
-      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Locations_CBG_With_Border/VectorTileServer',
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/dissolved_cbg_locations/VectorTileServer',
       visible: false})
       Locations_Blocks_With_Border.minScale = minScale;
       
       var Reserve_Blocks_With_Border = new VectorTileLayer({
-      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/Reserve_CBG_With_Border/VectorTileServer',
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/dissolve_cbg_support/VectorTileServer',
       visible: false})
       Reserve_Blocks_With_Border.minScale = minScale;
        
-    
+      var Tract_Borders_For_Locations = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/tract_borders/VectorTileServer'}) 
+      Tract_Borders_For_Locations.minScale = minScale;
+      Tract_Borders_For_Locations.visible = false;
+  
+      var Tract_Borders_For_Support = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/tract_borders/VectorTileServer'}) 
+      Tract_Borders_For_Support.minScale = minScale;
+      Tract_Borders_For_Support.visible = false;
+  
+  
+      var Block_Borders_For_Locations = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/cbg_borders/VectorTileServer'}) 
+      Block_Borders_For_Locations.minScale = minScale;
+      Block_Borders_For_Locations.visible = false;
+  
+      var Block_Borders_For_Support = new VectorTileLayer({
+      url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/cbg_borders/VectorTileServer'}) 
+      Block_Borders_For_Support.minScale = minScale;
+      Block_Borders_For_Support.visible = false;
+  
+  
+  
 
       // Add tile layers to map
         map.add(Coverage_Area_Tracts_No_Border);
         map.add(Locations_Blocks_No_Border); 
-        map.add(Locations_Blocks_With_Border);
+        // map.add(Locations_Blocks_With_Border);
   
         map.add(Locations_No_Border_Tracts);
-        map.add(Locations_Tract_With_Border);
+        // map.add(Locations_Tract_With_Border);
   
         map.add(Reserve_Blocks_No_Border); 
-        map.add(Reserve_Blocks_With_Border);
+        // map.add(Reserve_Blocks_With_Border);
   
         map.add(Reserve_Tracts_No_Border);
-        map.add(Reserve_Tracts_With_Border);
+        // map.add(Reserve_Tracts_With_Border);
   
-        map.add(Coverage_Area_Tracts_With_Border); 
-        map.add(Coverage_Area_Blocks_With_Border);
+         // map.add(Coverage_Area_Tracts_With_Border); 
+         // map.add(Coverage_Area_Blocks_With_Border);
   
          map.add(split_blocks)  
       
          map.add(BlocksFeatureLayer);
          map.add(TractFeatureLayer);
-       
-
+  
+         map.add(Tract_Borders);
+         map.add(Tract_Borders_For_Locations);
+         map.add(Tract_Borders_For_Support);
+               
+  
+         map.add(Block_Borders);
+         map.add(Block_Borders_For_Locations);
+         map.add(Block_Borders_For_Support);
+  
+  
+  
     
         // Opacity Slider Stuff 
        var slider =  document.getElementById("sliderobject")
@@ -687,7 +722,7 @@ var dojoConfig = {
       Reserve_Blocks_With_Border.visible = false;
       Reserve_Tracts_With_Border.visible = false;
       Coverage_Area_Tracts_With_Border.visible = false;
-      Coverage_Area_Blocks_With_Border.visible = true;
+      Coverage_Area_Blocks_With_Border.visible = false;
       Coverage_Area_Tracts_No_Border.visible = true;
       Locations_Blocks_No_Border.visible = false;
       Reserve_Blocks_No_Border.visible = false;
@@ -701,7 +736,6 @@ var dojoConfig = {
       } 
       
       else if (area_toggle.checked == true && window.legends_hidden == 2) {
-      console.log('hi4')  
       $("#show_legend_button").fadeOut(200);
       BlocksFeatureLayer.popupTemplate = cbg_area_template;
       Locations_Blocks_With_Border.visible = false;
@@ -709,7 +743,7 @@ var dojoConfig = {
       Reserve_Blocks_With_Border.visible = false;
       Reserve_Tracts_With_Border.visible = false;
       Coverage_Area_Tracts_With_Border.visible = false;
-      Coverage_Area_Blocks_With_Border.visible = true;
+      Coverage_Area_Blocks_With_Border.visible = false;
       Coverage_Area_Tracts_No_Border.visible = true;
       Locations_Blocks_No_Border.visible = false;
       Reserve_Blocks_No_Border.visible = false;
@@ -724,14 +758,13 @@ var dojoConfig = {
        
       // Actions for Eligible Area Tracts For When Legend is Hidden (1) and Shown(2)
       if (area_toggle.checked == false && window.legends_hidden == 1) {
-      console.log('hi1')
       $("#show_legend_button").fadeIn(200);
       TractFeatureLayer.popupTemplate = tracts_area_template;
       Locations_Blocks_With_Border.visible = false;
       Locations_Tract_With_Border.visible = false;
       Reserve_Blocks_With_Border.visible = false;
       Reserve_Tracts_With_Border.visible = false;
-      Coverage_Area_Tracts_With_Border.visible = true;
+      Coverage_Area_Tracts_With_Border.visible = false;
       Coverage_Area_Blocks_With_Border.visible = false;
       Coverage_Area_Tracts_No_Border.visible = true;
       Locations_Blocks_No_Border.visible = false;
@@ -746,14 +779,13 @@ var dojoConfig = {
       } 
       
       else if (area_toggle.checked == false && window.legends_hidden == 2) {
-      console.log('hi2')    
       $("#show_legend_button").fadeOut(200);
       TractFeatureLayer.popupTemplate = tracts_area_template;
       Locations_Blocks_With_Border.visible = false;
       Locations_Tract_With_Border.visible = false;
       Reserve_Blocks_With_Border.visible = false;
       Reserve_Tracts_With_Border.visible = false;
-      Coverage_Area_Tracts_With_Border.visible = true;
+      Coverage_Area_Tracts_With_Border.visible = false;
       Coverage_Area_Blocks_With_Border.visible = false;
       Coverage_Area_Tracts_No_Border.visible = true;
       Locations_Blocks_No_Border.visible = false;
@@ -781,7 +813,39 @@ var dojoConfig = {
       Coverage_Area_Tracts_No_Border.visible = false;
       Locations_No_Border_Tracts.visible = true;
       if (area_toggle.checked == true && window.legends_hidden == 1) {
+                                                  Locations_Blocks_With_Border
+          .when(function() {
+            Block_Borders_For_Locations.visible = true;
+          })
+      Block_Borders.visible = false;    
       $("#show_legend_button").fadeIn(200);
+      BlocksFeatureLayer.popupTemplate = cbg_area_template;
+      Locations_Blocks_With_Border.visible = true;
+      Locations_Tract_With_Border.visible = false;
+      Reserve_Blocks_With_Border.visible = false;
+      Reserve_Tracts_With_Border.visible = false;
+      Coverage_Area_Tracts_With_Border.visible = false;
+      Coverage_Area_Blocks_With_Border.visible = false;
+      Coverage_Area_Tracts_No_Border.visible = false;
+      Locations_Blocks_No_Border.visible = true;
+      Reserve_Blocks_No_Border.visible = false;
+      Locations_No_Border_Tracts.visible = false;
+      Reserve_Tracts_No_Border.visible = false; 
+      $("#elig_area_legend").fadeOut("fast");
+      $("#elig_support_legend").fadeOut("fast");
+      $("#elig_locs_legend").fadeIn("fast");
+      $("#split_blocks_legend_low").fadeOut("fast");
+      $("#split_blocks_legend_high").fadeOut("fast");
+      } 
+      
+      else if (area_toggle.checked == true && window.legends_hidden == 2) {
+      Block_Borders.visible = false; 
+      Block_Borders_For_Support.visible = false;
+                                                          Locations_Blocks_No_Border
+          .when(function() {                                            
+            Block_Borders_For_Locations.visible = true;
+          })
+      $("#show_legend_button").fadeOut(200);
       BlocksFeatureLayer.popupTemplate = cbg_area_template;
       Locations_Blocks_With_Border.visible = true;
       Locations_Tract_With_Border.visible = false;
@@ -796,30 +860,16 @@ var dojoConfig = {
       Reserve_Tracts_No_Border.visible = false;
       $("#elig_area_legend").fadeOut("fast");
       $("#elig_support_legend").fadeOut("fast");
-      //$("#elig_locs_legend").fadeIn("fast");
+      $("#elig_locs_legend").fadeIn("fast");
       $("#split_blocks_legend_low").fadeOut("fast");
       $("#split_blocks_legend_high").fadeOut("fast");
-      } 
-      
-      else if (area_toggle.checked == true && window.legends_hidden == 2) {
-      $("#show_legend_button").fadeOut(200);
-      BlocksFeatureLayer.popupTemplate = cbg_area_template;
-      Locations_Blocks_With_Border.visible = true;
-      Locations_Tract_With_Border.visible = false;
-      Reserve_Blocks_With_Border.visible = false;
-      Reserve_Tracts_With_Border.visible = false;
-      Coverage_Area_Tracts_With_Border.visible = false;
-      Coverage_Area_Blocks_With_Border.visible = false;
-      Coverage_Area_Tracts_No_Border.visible = false;
-      Locations_Blocks_No_Border.visible = true;
-      Reserve_Blocks_No_Border.visible = false;
-      Locations_No_Border_Tracts.visible = false;
-      Reserve_Tracts_No_Border.visible = false;
-      
       }  
        
       // Actions for Eligible Locations Tracts For When Legend is Hidden (1) and Shown(2)
       if (area_toggle.checked == false && window.legends_hidden == 1) {
+                              Coverage_Area_Tracts_No_Border.when(function() {
+            Tract_Borders_For_Locations.visible = true;
+          })
       $("#show_legend_button").fadeIn(200);
       TractFeatureLayer.popupTemplate = tracts_locs_template;
       Locations_Blocks_With_Border.visible = false;
@@ -833,6 +883,8 @@ var dojoConfig = {
       Reserve_Blocks_No_Border.visible = false;
       Locations_No_Border_Tracts.visible = true;
       Reserve_Tracts_No_Border.visible = false;
+      Tract_Borders.visible = false;
+      Tract_Borders_For_Support.visible = false  
       $("#elig_area_legend").fadeOut("fast");
       $("#elig_support_legend").fadeOut("fast");
       $("#elig_locs_legend").fadeOut("fast");
@@ -841,6 +893,10 @@ var dojoConfig = {
       } 
       
       else if (area_toggle.checked == false && window.legends_hidden == 2) { 
+                      Coverage_Area_Tracts_No_Border
+          .when(function() {
+            Tract_Borders_For_Locations.visible = true;
+          })
       $("#show_legend_button").fadeOut(200);
       TractFeatureLayer.popupTemplate = tracts_locs_template;
       Locations_Blocks_With_Border.visible = false;
@@ -854,6 +910,8 @@ var dojoConfig = {
       Reserve_Blocks_No_Border.visible = false;
       Locations_No_Border_Tracts.visible = true;
       Reserve_Tracts_No_Border.visible = false;
+      Tract_Borders.visible = false;
+      Tract_Borders_For_Support.visible = false;  
       $("#elig_area_legend").fadeOut("fast");
       $("#elig_support_tracts_legend").fadeOut("fast");
       $("#elig_locations_tracts_legend").fadeIn("fast");
@@ -873,6 +931,12 @@ var dojoConfig = {
      
 
      if (area_toggle.checked == true && window.legends_hidden == 1) {
+                                                         Reserve_Blocks_With_Border
+          .when(function() {
+            Block_Borders_For_Support.visible = true;
+          })
+      Block_Borders.visible = false;  
+      Block_Borders_For_Locations.visible = false; 
       $("#show_legend_button").fadeIn(200);
       BlocksFeatureLayer.popupTemplate = cbg_area_template;
       Locations_Blocks_With_Border.visible = false;
@@ -893,6 +957,12 @@ var dojoConfig = {
       } 
       
       else if (area_toggle.checked == true && window.legends_hidden == 2) {
+                                                                 Reserve_Blocks_No_Border
+          .when(function() {
+            Block_Borders_For_Support.visible = true;
+          })
+      Block_Borders.visible = false;
+      Block_Borders_For_Locations.visible = false;
       $("#show_legend_button").fadeOut(200);
       BlocksFeatureLayer.popupTemplate = cbg_support_template;
       Locations_Blocks_With_Border.visible = false;
@@ -913,8 +983,12 @@ var dojoConfig = {
       $("#elig_locs_legend").fadeOut("fast");
       }  
        
-      // Actions for Eligible Locations Tracts For When Legend is Hidden (1) and Shown(2)
+      // Actions for Eligible Support Tracts For When Legend is Hidden (1) and Shown(2)
       if (area_toggle.checked == false && window.legends_hidden == 1) {
+                              Reserve_Tracts_No_Border
+          .when(function() {
+            Tract_Borders_For_Support.visible = true;
+          })
       $("#show_legend_button").fadeIn(200);
       TractFeatureLayer.popupTemplate = tracts_support_template;
       Locations_Blocks_With_Border.visible = false;
@@ -928,6 +1002,8 @@ var dojoConfig = {
       Reserve_Blocks_No_Border.visible = false;
       Locations_No_Border_Tracts.visible = false;
       Reserve_Tracts_No_Border.visible = true;
+      Tract_Borders.visible = false;
+      Tract_Borders_For_Locations.visible = false;  
       $("#elig_area_legend").fadeOut("fast");
       $("#elig_support_legend").fadeOut("fast");
       $("#elig_locs_legend").fadeOut("fast");
@@ -936,6 +1012,10 @@ var dojoConfig = {
       } 
       
       else if (area_toggle.checked == false && window.legends_hidden == 2) {
+                              Reserve_Tracts_No_Border
+          .when(function() {
+            Tract_Borders_For_Support.visible = true;
+          })
       $("#show_legend_button").fadeOut(200);
       TractFeatureLayer.popupTemplate = tracts_locs_template;
       Locations_Blocks_With_Border.visible = false;
@@ -949,6 +1029,8 @@ var dojoConfig = {
       Reserve_Blocks_No_Border.visible = false;
       Locations_No_Border_Tracts.visible = false;
       Reserve_Tracts_No_Border.visible = true;
+      Tract_Borders.visible = false;       
+      Tract_Borders_For_Locations.visible = false;
       $("#elig_area_legend").fadeOut("fast");
       $("#elig_support_tracts_legend").fadeIn("fast");
       $("#elig_locations_tracts_legend").fadeOut("fast");
@@ -973,55 +1055,79 @@ var dojoConfig = {
       area_toggle.addEventListener("change", function() {
         
       
+      if (area_toggle.checked == true){
+      BlocksFeatureLayer.visible = true;
+      TractFeatureLayer.visible = false;
+      Block_Borders.visible = true;
+      Block_Borders_For_Locations.visible = true;
+      Block_Borders_For_Support.visible = true;
+      Tract_Borders.visible = false;
+      Tract_Borders_For_Locations.visible = false;
+      Tract_Borders_For_Support.visible = false;  
+      
+      } 
+      else if (area_toggle.checked == false){
+      BlocksFeatureLayer.visible = false;
+      TractFeatureLayer.visible = true;
+      Block_Borders.visible = false;
+      Block_Borders_For_Locations.visible = false;
+      Block_Borders_For_Support.visible = false;
+      Tract_Borders.visible = true;
+      Tract_Borders_For_Locations.visible = true;
+      Tract_Borders_For_Support.visible = true; 
+      }
+        
+  
+
       window.beginZoom = view.get('zoom');
         
  
-      watchUtils.when(view, "stationary", function() {
-      const currentZoom = view.get('zoom');
-      if (currentZoom == 9 && area_toggle.checked == true && elig_locs_toggle.checked == true && window.legends_hidden == 2) {
-      $("#show_legend_button").fadeOut(200);
-      Locations_Tract_With_Border.visible = false;
-      Reserve_Blocks_With_Border.visible = false;
-      Reserve_Tracts_With_Border.visible = false;
-      Coverage_Area_Tracts_With_Border.visible = false;
-      Coverage_Area_Blocks_With_Border.visible = false;
-      Coverage_Area_Tracts_No_Border.visible = false;
-      Locations_Blocks_No_Border.visible = true;
-      Reserve_Blocks_No_Border.visible = false;
-      Locations_No_Border_Tracts.visible = false;
-      Reserve_Tracts_No_Border.visible = false;
-      Locations_Blocks_With_Border.visible = true;
-      BlocksFeatureLayer.popupTemplate = cbg_locs_template;
-      $("#elig_support_legend").fadeOut("fast");
-      $("#elig_locs_legend").fadeIn("fast");
-      $("#elig_area_legend").fadeOut("fast");
-      $("#elig_locations_tracts_legend").fadeOut("fast");
-      $("#elig_support_tracts_legend").fadeOut("fast");   
-      console.log('Now you are zoomed in.')
-        }
-      });  
+      // watchUtils.when(view, "stationary", function() {
+      // const currentZoom = view.get('zoom');
+      // if (currentZoom == 9 && area_toggle.checked == true && elig_locs_toggle.checked == true && window.legends_hidden == 2) {
+      // $("#show_legend_button").fadeOut(200);
+      // Locations_Tract_With_Border.visible = false;
+      // Reserve_Blocks_With_Border.visible = false;
+      // Reserve_Tracts_With_Border.visible = false;
+      // Coverage_Area_Tracts_With_Border.visible = false;
+      // Coverage_Area_Blocks_With_Border.visible = false;
+      // Coverage_Area_Tracts_No_Border.visible = false;
+      // Locations_Blocks_No_Border.visible = true;
+      // Reserve_Blocks_No_Border.visible = false;
+      // Locations_No_Border_Tracts.visible = false;
+      // Reserve_Tracts_No_Border.visible = false;
+      // Locations_Blocks_With_Border.visible = true;
+      // BlocksFeatureLayer.popupTemplate = cbg_locs_template;
+      // $("#elig_support_legend").fadeOut("fast");
+      // $("#elig_locs_legend").fadeIn("fast");
+      // $("#elig_area_legend").fadeOut("fast");
+      // $("#elig_locations_tracts_legend").fadeOut("fast");
+      // $("#elig_support_tracts_legend").fadeOut("fast");   
+      // console.log('Now you are zoomed in.')
+      //   }
+      // });  
         
     
       view.popup.close()
         
-      if (area_toggle.checked == true && window.beginZoom < 9){
-      BlocksFeatureLayer.visible = true;
-      TractFeatureLayer.visible = false;
-      view.goTo({center: [window.long_center, window.lat_center], zoom: 9},
-                {duration: 500, easing: "linear"}); 
-      view.constraints.minZoom = 9;
-      } 
-      else if (area_toggle.checked == true && window.beginZoom >= 9){
-      BlocksFeatureLayer.visible = true;
-      TractFeatureLayer.visible = false;
-      view.constraints.minZoom = 9;  
-      }
+//       if (area_toggle.checked == true && window.beginZoom < 9){
+//       BlocksFeatureLayer.visible = true;
+//       TractFeatureLayer.visible = false;
+//       view.goTo({center: [window.long_center, window.lat_center], zoom: 9},
+//                 {duration: 500, easing: "linear"}); 
+//       view.constraints.minZoom = 9;
+//       } 
+//       else if (area_toggle.checked == true && window.beginZoom >= 9){
+//       BlocksFeatureLayer.visible = true;
+//       TractFeatureLayer.visible = false;
+//       view.constraints.minZoom = 9;  
+//       }
         
-      else if (area_toggle.checked == false){
-      BlocksFeatureLayer.visible = false;
-      TractFeatureLayer.visible = true;
-      view.constraints.minZoom = 6;  
-      }; 
+//       else if (area_toggle.checked == false){
+//       BlocksFeatureLayer.visible = false;
+//       TractFeatureLayer.visible = true;
+//       view.constraints.minZoom = 6;  
+//       }; 
       
     
       
@@ -1122,7 +1228,11 @@ var dojoConfig = {
       Locations_No_Border_Tracts.visible = false;
       Reserve_Tracts_No_Border.visible = false;
       Locations_Blocks_With_Border.visible = true;
- 
+                                        Locations_Blocks_No_Border
+          .when(function() {
+            Block_Borders_For_Locations.visible = true;
+          })
+      Block_Borders.visible = false;
       BlocksFeatureLayer.popupTemplate = cbg_locs_template;
       $("#elig_area_legend").fadeOut("fast");
       $("#elig_support_legend").fadeOut("fast");
@@ -1131,6 +1241,7 @@ var dojoConfig = {
       $("#elig_support_tracts_legend").fadeOut("fast");
       } else if (area_toggle.checked == true && elig_locs_toggle.checked == true && window.legends_hidden == 2){
       $("#show_legend_button").fadeOut(200);
+      Block_Borders.visible = false;        
       Locations_Tract_With_Border.visible = false;
       Reserve_Blocks_With_Border.visible = false;
       Reserve_Tracts_With_Border.visible = false;
@@ -1142,6 +1253,11 @@ var dojoConfig = {
       Locations_No_Border_Tracts.visible = false;
       Reserve_Tracts_No_Border.visible = false;
       Locations_Blocks_With_Border.visible = true;
+                                        Locations_Blocks_No_Border
+          .when(function() {
+            Block_Borders_For_Locations.visible = true;
+          })
+      Block_Borders.visible = false;
       BlocksFeatureLayer.popupTemplate = cbg_locs_template;
       $("#elig_support_legend").fadeOut("fast");
       $("#elig_locs_legend").fadeIn("fast");
@@ -1153,6 +1269,11 @@ var dojoConfig = {
       
       // If Conditions for Locations Tracts for When the Legend is Hidden (1) and Shown (2)
       if (area_toggle.checked == false && elig_locs_toggle.checked == true && window.legends_hidden == 1){
+                                    Locations_Tract_With_Border
+          .when(function() {
+            Tract_Borders_For_Locations.visible = true;
+          })
+      Tract_Borders.visible = false;   
       $("#show_legend_button").fadeIn(200);
       Locations_Tract_With_Border.visible = true;
       Locations_Blocks_With_Border.visible = false;
@@ -1172,6 +1293,11 @@ var dojoConfig = {
       $("#elig_locations_tracts_legend").fadeOut("fast");
       $("#elig_support_tracts_legend").fadeOut("fast");
       } else if (area_toggle.checked == false && elig_locs_toggle.checked == true &&  window.legends_hidden == 2){
+                                          Locations_Tract_With_Border
+          .when(function() {
+            Tract_Borders_For_Locations.visible = true;
+          })
+      Tract_Borders.visible = false;    
       $("#show_legend_button").fadeOut(200);
       Locations_Tract_With_Border.visible = true; 
       Locations_Blocks_With_Border.visible = false;
@@ -1195,6 +1321,11 @@ var dojoConfig = {
       
       // If Conditions for Support Block Group for When the Legend is Hidden (1) and Shown (2)
       if (area_toggle.checked == true && elig_support_toggle.checked == true && window.legends_hidden == 1){
+                                             Reserve_Blocks_No_Border
+          .when(function() {
+            Block_Borders_For_Support.visible = true;
+          })
+      Block_Borders.visible = false;  
       $("#show_legend_button").fadeIn(200);
       Locations_Blocks_With_Border.visible = false;
       Locations_Tract_With_Border.visible = false;
@@ -1214,6 +1345,11 @@ var dojoConfig = {
       $("#elig_locations_tracts_legend").fadeOut("fast");
       $("#elig_support_tracts_legend").fadeOut("fast");
       } else if (area_toggle.checked == true && elig_support_toggle.checked == true &&  window.legends_hidden == 2){
+                                                   Reserve_Blocks_No_Border
+          .when(function() {
+            Block_Borders_For_Support.visible = true;
+          })
+      Block_Borders.visible = false;    
       $("#show_legend_button").fadeOut(200);
       Locations_Blocks_With_Border.visible = false;
       Locations_Tract_With_Border.visible = false;
@@ -1236,6 +1372,11 @@ var dojoConfig = {
 
       // If Conditions for Support Tracts for When the Legend is Hidden (1) and Shown (2)
       if (area_toggle.checked == false && elig_support_toggle.checked == true && window.legends_hidden == 1){
+                                          Reserve_Tracts_With_Border
+          .when(function() {
+            Tract_Borders_For_Support.visible = true;
+          })
+      Tract_Borders.visible = false;    
       $("#show_legend_button").fadeIn(200);
       Reserve_Tracts_With_Border.visible = true;
       Locations_Blocks_With_Border.visible = false;
@@ -1255,6 +1396,11 @@ var dojoConfig = {
       $("#elig_locations_tracts_legend").fadeOut("fast");
       $("#elig_support_tracts_legend").fadeOut("fast");
       } else if (area_toggle.checked == false && elig_support_toggle.checked == true &&  window.legends_hidden == 2){
+                                                  Reserve_Tracts_With_Border
+          .when(function() {
+            Tract_Borders_For_Support.visible = true;
+          })
+      Tract_Borders.visible = false;    
       $("#show_legend_button").fadeOut(200);
       Reserve_Tracts_With_Border.visible = true; 
       Locations_Blocks_With_Border.visible = false;
@@ -1555,7 +1701,7 @@ $(function(){
                     </tr>
                     <tr>
                         <td>
-                            <div class="key-symbol" style="background-color:#BDD7E7 "></div>
+                            <div class="key-symbol" style="background-color:#002673"></div>
                         </td>
                 </tbody>
             </table>
@@ -1578,31 +1724,31 @@ $(function(){
                         <td>
                             <div class="key-symbol" style="background-color:#EDF8FB"></div>
                         </td>
-                        <td>0 - 60</td>
+                        <td>0 - 85</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="key-symbol" style="background-color:#B3CDE3"></div>
                         </td>
-                        <td>61 - 150</td>
+                        <td>86 - 250</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="key-symbol" style="background-color:#8C96C6"></div>
                         </td>
-                        <td>151 - 300</td>
+                        <td>251 - 450</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="key-symbol" style="background-color:#8856A7"></div>
                         </td>
-                        <td>301 - 500</td>
+                        <td>451 - 1,000</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="key-symbol" style="background-color:#810F7C"></div>
                         </td>
-                        <td>501 - 1250</td>
+                        <td>1,001 - 3,050</td>
                     </tr>
             </table>
         </div>
@@ -1612,7 +1758,7 @@ $(function(){
             <table>
                 <thead>
                     <tr>
-                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name"> Annual Reserve Price in Block Groups &nbsp; &nbsp;</span>
+                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name"> Annual Support in Block Groups &nbsp; &nbsp;</span>
                         <button id="close_elig_support_btn" class="close"><span class="close">&times;</span> <span class="sr-only">Hide legend</span></button>
 
                         </td>
@@ -1623,31 +1769,31 @@ $(function(){
                         <td>
                             <div class="key-symbol" style="background-color:#EDF8FB"></div>
                         </td>
-                        <td>0 - $35,000</td>
+                        <td>0 - $80,000</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="key-symbol" style="background-color:#B2E2E2 "></div>
                         </td>
-                        <td>$35,001 - $95,000</td>
+                        <td>$80,001 - $220,000</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="key-symbol" style="background-color:#56B990"></div>
                         </td>
-                        <td>$95,001 - $185,000</td>
+                        <td>$220,001 - $450,000</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="key-symbol" style="background-color:#2CA25F"></div>
                         </td>
-                        <td>$185,001 - $350,000</td>
+                        <td>$450,000 - $1,000,000</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="key-symbol" style="background-color:#006D2C"></div>
                         </td>
-                        <td>$350,001 - $950,000</td>
+                        <td>$1,000,000 - $2,200,000</td>
                     </tr>
             </table>
         </div>     
@@ -1657,7 +1803,7 @@ $(function(){
             <table>
                 <thead>
                     <tr>
-                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name"> Annual Reserve Price in Tracts  &nbsp; &nbsp;</span>
+                        <td colspan="3"><span class="icon icon-list"></span> <span class="map-legend-name"> Annual Support in Tracts  &nbsp; &nbsp;</span>
                         <button id="close_elig_support_tracts_btn" class="close"><span class="close">&times;</span> <span class="sr-only">Hide legend</span></button>
 
                         </td>
@@ -1668,31 +1814,31 @@ $(function(){
                         <td>
                             <div class="key-symbol" style="background-color:#EDF8FB"></div>
                         </td>
-                        <td>0 - $130,000</td>
+                        <td>0 - $120,000</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="key-symbol" style="background-color:#B2E2E2 "></div>
                         </td>
-                        <td>$130,001 - $390,000</td>
+                        <td>$120,001 - $400,000</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="key-symbol" style="background-color:#56B990"></div>
                         </td>
-                        <td>$390,000 - $750,000</td>
+                        <td>$400,001 - $800,000</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="key-symbol" style="background-color:#2CA25F"></div>
                         </td>
-                        <td>$750,001 - $1,580,000</td>
+                        <td>$800,000 - $2,000,000</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="key-symbol" style="background-color:#006D2C"></div>
                         </td>
-                        <td>$1,580,001 - $4,200,000</td>
+                        <td>$2,000,001 - $4,600,001</td>
                     </tr>
             </table>
         </div>     
@@ -1724,19 +1870,19 @@ $(function(){
                         <td>
                             <div class="key-symbol" style="background-color:#8C96C6"></div>
                         </td>
-                        <td>601 - 1000</td>
+                        <td>601 - 1,100</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="key-symbol" style="background-color:#8856A7"></div>
                         </td>
-                        <td>1001 - 2000</td>
+                        <td>1,101 - 2,000</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="key-symbol" style="background-color:#810F7C"></div>
                         </td>
-                        <td>2000 - 2001</td>
+                        <td>2,000 - 4,300</td>
                     </tr>
             </table>
         </div>          
