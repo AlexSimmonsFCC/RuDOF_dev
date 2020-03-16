@@ -226,7 +226,7 @@ require([
    popup: false
  });
 
-esriId.registerOAuthInfos([info]);   
+
 
 var dojoConfig = {
     has: {
@@ -282,18 +282,12 @@ var dojoConfig = {
         position: 'top-left'
       })
 
+       view.on("click", function(){
+       console.log(view.scale)  
+       $("#basemap_menu").fadeOut(100);
+       $("#slider_menu").fadeOut(100);
+       });   
 
-//    view.watch("extent", function(currentExtent) {
-//     window.lat_center = currentExtent.center.latitude,
-//     window.long_center = currentExtent.center.longitude
-//    });
-           
-//       //  Click Event for Close Open Windows and Print Zoom to Console
-//        view.on("click", function(){
-//        console.log(view.zoom)  
-//        $("#basemap_menu").fadeOut(100);
-//        $("#slider_menu").fadeOut(100);
-//        });    
           
   // Set Global Legend Value        
    window.legends_hidden = 2;
@@ -527,15 +521,20 @@ var dojoConfig = {
       var maxScale = 9244667.357954139;
       var minScale = 9244666.357954139;
   
+      var maxScaleBorder = 2311167.8394885347;
+      var minScaleBorder = 2311166.8394885347;
+  
+
+  
      // Tract Borders 
       var Tract_Borders = new VectorTileLayer({
       url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/tract_borders/VectorTileServer'}) 
-      Tract_Borders.minScale = minScale;
+      Tract_Borders.minScale = minScaleBorder;
  
       // Block Borders 
       var Block_Borders = new VectorTileLayer({
       url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/cbg_borders/VectorTileServer'}) 
-      Block_Borders.minScale = minScale;
+      Block_Borders.minScale = minScaleBorder;
       Block_Borders.visible = false;
   
 
@@ -613,23 +612,23 @@ var dojoConfig = {
        
       var Tract_Borders_For_Locations = new VectorTileLayer({
       url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/tract_borders/VectorTileServer'}) 
-      Tract_Borders_For_Locations.minScale = minScale;
+      Tract_Borders_For_Locations.minScale = minScaleBorder;
       Tract_Borders_For_Locations.visible = false;
   
       var Tract_Borders_For_Support = new VectorTileLayer({
       url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/tract_borders/VectorTileServer'}) 
-      Tract_Borders_For_Support.minScale = minScale;
+      Tract_Borders_For_Support.minScale = minScaleBorder;
       Tract_Borders_For_Support.visible = false;
   
   
       var Block_Borders_For_Locations = new VectorTileLayer({
       url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/cbg_borders/VectorTileServer'}) 
-      Block_Borders_For_Locations.minScale = minScale;
+      Block_Borders_For_Locations.minScale = minScaleBorder;
       Block_Borders_For_Locations.visible = false;
   
       var Block_Borders_For_Support = new VectorTileLayer({
       url: 'https://tiles.arcgis.com/tiles/YnOQrIGdN9JGtBh4/arcgis/rest/services/cbg_borders/VectorTileServer'}) 
-      Block_Borders_For_Support.minScale = minScale;
+      Block_Borders_For_Support.minScale = minScaleBorder;
       Block_Borders_For_Support.visible = false;
   
   
